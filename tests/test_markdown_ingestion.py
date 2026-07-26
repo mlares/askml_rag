@@ -1,10 +1,10 @@
-import json                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-from askml_rag.ingestion.markdown import (                                                                                                                                                                                                                                      
-      ingest_markdown,                                                                                                                                                                                                                                                            
-      normalize_markdown,                                                                                                                                                                                                                                                         
-      write_canonical_document,                                                                                                                                                                                                                                                   
-)                                                                                                                                                                                                                                                                               
-from textwrap import dedent                 
+import json
+from askml_rag.ingestion.markdown import (
+    ingest_markdown,
+    normalize_markdown,
+    write_canonical_document,
+)
+from textwrap import dedent
 
 
 def test_normalize_markdown_removes_jekyll_front_matter_and_html() -> None:
@@ -45,7 +45,7 @@ def test_ingest_markdown_creates_a_canonical_document(tmp_path) -> None:
     manifest_path = tmp_path / "data" / "manifests" / "example.yaml"
     manifest_path.parent.mkdir(parents=True)
     manifest_path.write_text(
-          dedent("""
+        dedent("""
           document_id: example_source
           title: Example source
           document_type: website
@@ -57,8 +57,8 @@ def test_ingest_markdown_creates_a_canonical_document(tmp_path) -> None:
           topics:
             - example
           """).lstrip(),
-          encoding="utf-8",
-      )
+        encoding="utf-8",
+    )
 
     document = ingest_markdown(manifest_path, project_root=tmp_path)
 

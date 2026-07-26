@@ -15,8 +15,7 @@ def test_evaluation_questions_validate() -> None:
     assert payload["questions"], "The benchmark must contain at least one question."
 
     questions = [
-            EvaluationQuestion.model_validate(question)
-            for question in payload["questions"]
+        EvaluationQuestion.model_validate(question) for question in payload["questions"]
     ]
 
     question_ids = [question.question_id for question in questions]

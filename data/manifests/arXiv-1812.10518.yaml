@@ -1,0 +1,30 @@
+document_id: arxiv_1812_10518
+title: "Machine learning on difference image analysis: A comparison of methods for transient detection"
+document_type: publication
+year: 2019
+authors:
+  - "B. Sánchez"
+  - "M. J. Domínguez R."
+  - "M. Lares"
+  - "M. Beroiz"
+  - "J. B. Cabral"
+  - "S. Gurovich"
+  - "C. Quiñones"
+  - "R. Artola"
+  - "C. Colazo"
+  - "M. Schneiter"
+  - "C. Girardini"
+  - "M. Tornatore"
+  - "J. L. Nilo Castellón"
+  - "D. García Lambas"
+  - "M. C. Díaz"
+source_url: https://ui.adsabs.harvard.edu/abs/2019A&C....2800284S
+source_path: data/raw/publications/arXiv-1812.10518.pdf
+visibility: public
+topics:
+  - "Methods"
+  - "Data analysis"
+  - "Techniques"
+  - "Image processing"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+

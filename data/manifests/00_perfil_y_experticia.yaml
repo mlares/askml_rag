@@ -1,0 +1,11 @@
+document_id: cv_expertise
+title: Public profile and experience
+document_type: project
+authors:
+  - Marcelo Lares
+source_path: sources/public/00_perfil_y_experticia.md
+visibility: public
+topics:
+  - research-funding
+  - scientific-leadership
+  - research-engineering

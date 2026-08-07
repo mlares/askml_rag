@@ -1,0 +1,13 @@
+document_id: website_home
+title: Marcelo Lares
+document_type: website
+authors:
+  - Marcelo Lares
+source_url: https://www.mlares.space/
+source_path: data/raw/website_home.md
+visibility: public
+topics:
+  - applied-ai
+  - technical-leadership
+  - data-science
+  - machine-learning

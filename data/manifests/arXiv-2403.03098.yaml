@@ -1,0 +1,28 @@
+document_id: arxiv_2403_03098
+title: "Galaxies in the zone of avoidance: Misclassifications using machine learning tools"
+document_type: publication
+year: 2024
+authors:
+  - "P. Marchant Cortés"
+  - "J. L. Nilo Castellón"
+  - "M. V. Alonso"
+  - "L. Baravalle"
+  - "C. Villalon"
+  - "M. A. Sgró"
+  - "I. V. Daza-Perilla"
+  - "M. Soto"
+  - "F. Milla Castro"
+  - "D. Minniti"
+  - "N. Masetti"
+  - "C. Valotto"
+  - "M. Lares"
+source_url: https://ui.adsabs.harvard.edu/abs/2024A&A...686A..18M
+source_path: data/raw/publications/arXiv-2403.03098.pdf
+visibility: public
+topics:
+  - "catalogs"
+  - "surveys"
+  - "infrared: galaxies"
+  - "X-rays: galaxies"
+  - "Astrophysics - Astrophysics of Galaxies"
+

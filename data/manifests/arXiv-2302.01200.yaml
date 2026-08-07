@@ -1,0 +1,24 @@
+document_id: arxiv_2302_01200
+title: "Automated classification of eclipsing binary systems in the VVV Survey"
+document_type: publication
+year: 2023
+authors:
+  - "I. V. Daza-Perilla"
+  - "L. V. Gramajo"
+  - "M. Lares"
+  - "T. Palma"
+  - "C. E. Ferreira Lopes"
+  - "D. Minniti"
+  - "J. J. Clariá"
+source_url: https://ui.adsabs.harvard.edu/abs/2023MNRAS.520..828D
+source_path: data/raw/publications/arXiv-2302.01200.pdf
+visibility: public
+topics:
+  - "methods: data analysis"
+  - "methods: statistical"
+  - "binaries: eclipsing"
+  - "infrared: stars"
+  - "Astrophysics - Solar and Stellar Astrophysics"
+  - "Astrophysics - Astrophysics of Galaxies"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+

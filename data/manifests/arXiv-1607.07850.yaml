@@ -1,0 +1,49 @@
+document_id: arxiv_1607_07850
+title: "GW150914: First Search for the Electromagnetic Counterpart of a Gravitational-wave Event by the TOROS Collaboration"
+document_type: publication
+year: 2016
+authors:
+  - "Mario C. Díaz"
+  - "Martín Beroiz"
+  - "Tania Peñuela"
+  - "Lucas M. Macri"
+  - "Ryan J. Oelkers"
+  - "Wenlong Yuan"
+  - "Diego García Lambas"
+  - "Juan Cabral"
+  - "Carlos Colazo"
+  - "Mariano Domínguez"
+  - "Bruno Sánchez"
+  - "Sebastián Gurovich"
+  - "Marcelo Lares"
+  - "Matías Schneiter"
+  - "Darío Graña"
+  - "Víctor Renzi"
+  - "Horacio Rodriguez"
+  - "Manuel Starck"
+  - "Rubén Vrech"
+  - "Rodolfo Artola"
+  - "Antonio Chiavassa Ferreyra"
+  - "Carla Girardini"
+  - "Cecilia Quiñones"
+  - "Luis Tapia"
+  - "Marina Tornatore"
+  - "Jennifer L. Marshall"
+  - "Darren L. DePoy"
+  - "Marica Branchesi"
+  - "Enzo Brocato"
+  - "Nelson Padilla"
+  - "Nicolas A. Pereyra"
+  - "Soma Mukherjee"
+  - "Matthew Benacquista"
+  - "Joey Key"
+source_url: https://ui.adsabs.harvard.edu/abs/2016ApJ...828L..16D
+source_path: data/raw/publications/arXiv-1607.07850.pdf
+visibility: public
+topics:
+  - "gravitational waves"
+  - "techniques: image processing"
+  - "Astrophysics - High Energy Astrophysical Phenomena"
+  - "Astrophysics - Cosmology and Nongalactic Astrophysics"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+

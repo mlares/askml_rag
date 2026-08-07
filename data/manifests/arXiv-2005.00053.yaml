@@ -1,0 +1,21 @@
+document_id: arxiv_2005_00053
+title: "Spatial correlations of extended cosmological structures"
+document_type: publication
+year: 2020
+authors:
+  - "V. Santucho"
+  - "H. E. Luparello"
+  - "M. Lares"
+  - "D. G. Lambas"
+  - "A. N. Ruiz"
+  - "M. A. Sgró"
+source_url: https://ui.adsabs.harvard.edu/abs/2020MNRAS.494.3227S
+source_path: data/raw/publications/arXiv-2005.00053.pdf
+visibility: public
+topics:
+  - "methods: data analysis"
+  - "methods: statistical"
+  - "large-scale structure of Universe"
+  - "cosmology: observations"
+  - "Astrophysics - Cosmology and Nongalactic Astrophysics"
+

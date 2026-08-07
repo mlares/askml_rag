@@ -1,0 +1,12 @@
+document_id: cv_education
+title: Education, studies and certifications
+document_type: project
+authors:
+  - Marcelo Lares
+source_path: sources/public/01_formacion.md
+visibility: public
+topics:
+  - formation
+  - education
+  - certifications
+  - research-engineering

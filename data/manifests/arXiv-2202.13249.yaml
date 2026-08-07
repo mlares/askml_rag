@@ -1,0 +1,18 @@
+document_id: arxiv_2202_13249
+title: "Spin alignment around TNG300-1 voids"
+document_type: publication
+year: 2023
+authors:
+  - "Federico Dávila-Kurbán"
+  - "Marcelo Lares"
+  - "Diego Garcia Lambas"
+source_url: https://ui.adsabs.harvard.edu/abs/2023MNRAS.518.3095D
+source_path: data/raw/publications/arXiv-2202.13249.pdf
+visibility: public
+topics:
+  - "methods: statistical"
+  - "software: simulations"
+  - "large-scale structure of Universe"
+  - "Astrophysics - Astrophysics of Galaxies"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+

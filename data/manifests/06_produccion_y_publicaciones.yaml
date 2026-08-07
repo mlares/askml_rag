@@ -1,0 +1,11 @@
+document_id: cv_papers
+title: Publications
+document_type: project
+authors:
+  - Marcelo Lares
+source_path: sources/public/06_produccion_y_publicaciones.md
+visibility: public
+topics:
+  - publications
+  - papers
+  - public science

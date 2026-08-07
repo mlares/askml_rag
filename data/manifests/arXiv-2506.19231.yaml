@@ -1,0 +1,33 @@
+document_id: arxiv_2506_19231
+title: "The VVV near-IR galaxy catalogue of the southern Galactic disc"
+document_type: publication
+year: 2025
+authors:
+  - "M. V. Alonso"
+  - "L. D. Baravalle"
+  - "J. L. Nilo-Castellón"
+  - "C. Villalon"
+  - "M. Soto"
+  - "M. A. Sgró"
+  - "I. V. Daza-Perilla"
+  - "C. Valotto"
+  - "M. Lares"
+  - "D. Minniti"
+  - "P. Marchant Cortés"
+  - "F. Milla Castro"
+  - "M. Hempel"
+  - "J. Alonso-García"
+  - "L. M. Macri"
+  - "A. Pichel"
+  - "N. Masetti"
+  - "R. K. Saito"
+  - "M. Gómez"
+source_url: https://ui.adsabs.harvard.edu/abs/2025A&A...700A..33A
+source_path: data/raw/publications/arXiv-2506.19231.pdf
+visibility: public
+topics:
+  - "galaxies: fundamental parameters"
+  - "galaxies: general"
+  - "galaxies: photometry"
+  - "Astrophysics of Galaxies"
+

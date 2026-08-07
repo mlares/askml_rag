@@ -1,0 +1,15 @@
+document_id: arxiv_2202_13244
+title: "A statistical formalism for alignment analysis"
+document_type: publication
+year: 2022
+authors:
+  - "F. Dávila-Kurbán"
+  - "M. Lares"
+  - "D. Garcia Lambas"
+source_url: https://ui.adsabs.harvard.edu/abs/2022arXiv220213244D
+source_path: data/raw/publications/arXiv-2202.13244.pdf
+visibility: public
+topics:
+  - "Methods: statistical"
+  - "Methods: numerical"
+

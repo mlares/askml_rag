@@ -1,0 +1,13 @@
+document_id: website_research
+title: Research
+document_type: website
+authors:
+  - Marcelo Lares
+source_url: https://www.mlares.space/research/
+source_path: data/raw/website_research.md
+visibility: public
+topics:
+  - astronomy
+  - astrostatistics
+  - machine-learning
+  - scientific-software

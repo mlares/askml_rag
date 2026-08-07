@@ -50,6 +50,19 @@ def test_rejects_chunk_with_a_different_document_type() -> None:
     assert not matches_filters(chunk, filters)
 
 
+def test_filters_chunks_by_document_id() -> None:
+    chunk = make_chunk()
+
+    assert matches_filters(
+        chunk,
+        RetrievalFilters(document_ids=["example_source"]),
+    )
+    assert not matches_filters(
+        chunk,
+        RetrievalFilters(document_ids=["different_source"]),
+    )
+
+
 def test_rejects_chunk_without_a_requested_topic() -> None:
     chunk = make_chunk(topics=["astronomy"])
     filters = RetrievalFilters(topics=["machine-learning"])

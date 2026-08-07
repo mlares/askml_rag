@@ -1,0 +1,19 @@
+document_id: arxiv_2011_05747
+title: "Improved two-point correlation function estimates using glass-like distributions as a reference sample"
+document_type: publication
+year: 2021
+authors:
+  - "Federico Dávila-Kurbán"
+  - "Ariel G. Sánchez"
+  - "Marcelo Lares"
+  - "Andrés N. Ruiz"
+source_url: https://ui.adsabs.harvard.edu/abs/2021MNRAS.506.4667D
+source_path: data/raw/publications/arXiv-2011.05747.pdf
+visibility: public
+topics:
+  - "methods: analytical"
+  - "methods: statistical"
+  - "galaxies: statistics"
+  - "large-scale structure of Universe"
+  - "Astrophysics - Cosmology and Nongalactic Astrophysics"
+

@@ -1,0 +1,24 @@
+document_id: arxiv_2105_01714
+title: "Drifting features: Detection and evaluation in the context of automatic RR Lyrae identification in the VVV"
+document_type: publication
+year: 2021
+authors:
+  - "J. B. Cabral"
+  - "M. Lares"
+  - "S. Gurovich"
+  - "D. Minniti"
+  - "P. M. Granitto"
+source_url: https://ui.adsabs.harvard.edu/abs/2021A&A...652A.151C
+source_path: data/raw/publications/arXiv-2105.01714.pdf
+visibility: public
+topics:
+  - "methods: data analysis"
+  - "methods: statistical"
+  - "surveys"
+  - "catalogs"
+  - "stars: variables: RR Lyrae"
+  - "Galaxy: bulge"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+  - "Astrophysics - Astrophysics of Galaxies"
+  - "Computer Science - Machine Learning"
+

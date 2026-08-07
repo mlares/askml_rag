@@ -1,0 +1,21 @@
+document_id: arxiv_1511_05451
+title: "Catalogue of Large Magellanic Cloud star clusters observed in the Washington photometric system"
+document_type: publication
+year: 2016
+authors:
+  - "T. Palma"
+  - "L. V. Gramajo"
+  - "J. J. Clariá"
+  - "M. Lares"
+  - "D. Geisler"
+  - "A. V. Ahumada"
+source_url: https://ui.adsabs.harvard.edu/abs/2016A&A...586A..41P
+source_path: data/raw/publications/arXiv-1511.05451.pdf
+visibility: public
+topics:
+  - "techniques: photometric"
+  - "Magellanic Clouds"
+  - "galaxies: star clusters: general"
+  - "Astrophysics - Solar and Stellar Astrophysics"
+  - "Astrophysics - Astrophysics of Galaxies"
+

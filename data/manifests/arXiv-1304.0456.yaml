@@ -1,0 +1,20 @@
+document_id: arxiv_1304_0456
+title: "Effects of superstructure environment on galaxy groups"
+document_type: publication
+year: 2013
+authors:
+  - "H. E. Luparello"
+  - "M. Lares"
+  - "C. Y. Yaryura"
+  - "D. Paz"
+  - "N. Padilla"
+  - "D. G. Lambas"
+source_url: https://ui.adsabs.harvard.edu/abs/2013MNRAS.432.1367L
+source_path: data/raw/publications/arXiv-1304.0456.pdf
+visibility: public
+topics:
+  - "methods: data analysis"
+  - "large-scale structure of Universe"
+  - "galaxies: statistics"
+  - "Astrophysics - Cosmology and Nongalactic Astrophysics"
+

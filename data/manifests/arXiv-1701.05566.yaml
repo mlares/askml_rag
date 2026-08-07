@@ -1,0 +1,26 @@
+document_id: arxiv_1701_05566
+title: "Corral framework: Trustworthy and fully functional data intensive parallel astronomical pipelines"
+document_type: publication
+year: 2017
+authors:
+  - "J. B. Cabral"
+  - "B. Sánchez"
+  - "M. Beroiz"
+  - "M. Domínguez"
+  - "M. Lares"
+  - "S. Gurovich"
+  - "P. Granitto"
+source_url: https://ui.adsabs.harvard.edu/abs/2017A&C....20..140C
+source_path: data/raw/publications/arXiv-1701.05566.pdf
+visibility: public
+topics:
+  - "Astroinformatics"
+  - "Astronomical pipeline"
+  - "Software and its engineering"
+  - "Multiprocessing"
+  - "Design patterns"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+  - "Computer Science - Software Engineering"
+  - "Physics - Data Analysis"
+  - "Statistics and Probability"
+

@@ -1,0 +1,24 @@
+document_id: arxiv_1912_09585
+title: "GriSPy: A Python package for fixed-radius nearest neighbors search"
+document_type: publication
+year: 2021
+authors:
+  - "M. Chalela"
+  - "E. Sillero"
+  - "L. Pereyra"
+  - "M. A. Garcia"
+  - "J. B. Cabral"
+  - "M. Lares"
+  - "M. Merchán"
+source_url: https://ui.adsabs.harvard.edu/abs/2021A&C....3400443C
+source_path: data/raw/publications/arXiv-1912.09585.pdf
+visibility: public
+topics:
+  - "Data mining"
+  - "Nearest-neighbor search"
+  - "Methods"
+  - "Data analysis"
+  - "Astroinformatics"
+  - "Python package"
+  - "Astrophysics - Instrumentation and Methods for Astrophysics"
+

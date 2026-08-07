@@ -1,0 +1,18 @@
+document_id: arxiv_astro_ph_0404505
+title: "Dynamical segregation of galaxies into groups and clusters"
+document_type: publication
+year: 2004
+authors:
+  - "M. Lares"
+  - "D. G. Lambas"
+  - "A. G. Sánchez"
+source_url: https://ui.adsabs.harvard.edu/abs/2004MNRAS.352..501L
+source_path: data/raw/publications/arXiv-astro-ph-0404505.pdf
+visibility: public
+topics:
+  - "methods: statistical"
+  - "galaxies: clusters: general"
+  - "galaxies: evolution"
+  - "galaxies: kinematics and dynamics"
+  - "Astrophysics"
+

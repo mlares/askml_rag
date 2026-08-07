@@ -1,0 +1,37 @@
+document_id: arxiv_2408_16864
+title: "The PAU survey: Enhancing photometric redshift estimation using DEEPz"
+document_type: publication
+year: 2025
+authors:
+  - "I. V. Daza-Perilla"
+  - "M. Eriksen"
+  - "D. Navarro-Gironés"
+  - "E. J. Gonzalez"
+  - "F. Rodriguez"
+  - "E. Gaztañaga"
+  - "C. M. Baugh"
+  - "M. Lares"
+  - "L. Cabayol-Garcia"
+  - "F. J. Castander"
+  - "M. Siudek"
+  - "A. Wittje"
+  - "H. Hildebrandt"
+  - "R. Casas"
+  - "P. Tallada-Crespí"
+  - "J. Garcia-Bellido"
+  - "E. Sanchez"
+  - "I. Sevilla-Noarbe"
+  - "R. Miquel"
+  - "C. Padilla"
+  - "P. Renard"
+  - "J. Carretero"
+  - "J. De Vicente"
+source_url: https://ui.adsabs.harvard.edu/abs/2025A&A...693A.102D
+source_path: data/raw/publications/arXiv-2408.16864.pdf
+visibility: public
+topics:
+  - "methods: statistical"
+  - "galaxies: distances and redshifts"
+  - "galaxies: high-redshift"
+  - "Astrophysics - Astrophysics of Galaxies"
+

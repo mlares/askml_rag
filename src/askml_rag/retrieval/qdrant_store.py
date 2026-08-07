@@ -35,6 +35,14 @@ def build_qdrant_filter(filters: RetrievalFilters) -> Filter:
         )
     ]
 
+    if filters.document_ids:
+        conditions.append(
+            FieldCondition(
+                key="document_id",
+                match=MatchAny(any=filters.document_ids),
+            )
+        )
+
     if filters.document_types:
         conditions.append(
             FieldCondition(

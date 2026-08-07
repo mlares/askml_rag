@@ -127,3 +127,31 @@ def test_qdrant_retriever_filters_by_document_type_and_topic() -> None:
     )
 
     assert [chunk.chunk_id for chunk in results] == ["teaching_chunk"]
+
+
+def test_qdrant_retriever_filters_by_document_id() -> None:
+    chunks = [
+        make_chunk("ranking_chunk", "Built a recommendation ranking model."),
+        Chunk(
+            **make_chunk(
+                "teaching_chunk",
+                "Taught statistics at university.",
+            ).model_dump(exclude={"document_id"}),
+            document_id="teaching_source",
+        ),
+    ]
+    retriever = QdrantSemanticRetriever(
+        QdrantClient(":memory:"),
+        "test_chunks",
+        FakeEmbedder(),
+        model_name="fake-model",
+    )
+    retriever.index(chunks)
+
+    results = retriever.search(
+        "recommendation query",
+        limit=3,
+        filters=RetrievalFilters(document_ids=["teaching_source"]),
+    )
+
+    assert [chunk.document_id for chunk in results] == ["teaching_source"]

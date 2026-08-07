@@ -1,5 +1,5 @@
 from enum import StrEnum
-from pydantic import BaseModel, Field, HttpUrl, model_validator
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
 
 class DocumentType(StrEnum):
@@ -14,6 +14,13 @@ class DocumentType(StrEnum):
 class Visibility(StrEnum):
     public = "public"
     excluded = "excluded"
+
+
+class AbstractSource(StrEnum):
+    """Origin of publication abstract text."""
+
+    bibtex = "bibtex"
+    pdf = "pdf"
 
 
 class SourceManifest(BaseModel):
@@ -49,6 +56,30 @@ class CanonicalDocument(BaseModel):
     body_markdown: str = Field(min_length=1)
 
 
+class PublicationMetadata(BaseModel):
+    """Normalized metadata for one publication included in the corpus."""
+
+    document_id: str = Field(pattern=r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
+    bibtex_key: str = Field(min_length=1)
+    entry_type: str = Field(min_length=1)
+    title: str = Field(min_length=1)
+    authors: list[str] = Field(min_length=1)
+    year: int = Field(ge=1900)
+    journal: str | None = None
+    journal_abbreviation: str | None = None
+    abstract: str | None = None
+    abstract_source: AbstractSource | None = None
+    keywords: list[str] = Field(default_factory=list)
+    doi: str | None = None
+    arxiv_id: str = Field(min_length=1)
+    primary_class: str | None = None
+    volume: str | None = None
+    number: str | None = None
+    pages: str | None = None
+    source_url: HttpUrl | None = None
+    ads_url: HttpUrl | None = None
+
+
 class Chunk(BaseModel):
     """A retrievable text fragment linked to one canonical document."""
 
@@ -68,6 +99,7 @@ class Chunk(BaseModel):
 class RetrievalFilters(BaseModel):
     """Optional constraints applied consistently during retrieval."""
 
+    document_ids: list[str] = Field(default_factory=list)
     document_types: list[DocumentType] = Field(default_factory=list)
     topics: list[str] = Field(default_factory=list)
     year_from: int | None = Field(default=None, ge=1900)
@@ -97,11 +129,15 @@ class QuestionCategory(StrEnum):
 
 
 class ExpectedClaim(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     claim: str = Field(min_length=1)
     source_document_ids: list[str] = Field(min_length=1)
 
 
 class EvaluationQuestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     question_id: str = Field(
         pattern=r"^[a-z0-9]+(?:_[a-z0-9]+)*$",
         examples=["ml_experience_001"],

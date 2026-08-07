@@ -1,0 +1,20 @@
+document_id: arxiv_2206_14217
+title: "The cosmic shallows - I. Interaction of CMB photons in extended galaxy haloes"
+document_type: publication
+year: 2023
+authors:
+  - "Heliana E. Luparello"
+  - "Ezequiel F. Boero"
+  - "Marcelo Lares"
+  - "Ariel G. Sánchez"
+  - "Diego Garcia Lambas"
+source_url: https://ui.adsabs.harvard.edu/abs/2023MNRAS.518.5643L
+source_path: data/raw/publications/arXiv-2206.14217.pdf
+visibility: public
+topics:
+  - "cosmic microwave background"
+  - "large scale structure of the Universe"
+  - "methods: statistical"
+  - "Cosmology and Nongalactic Astrophysics"
+  - "General Relativity and Quantum Cosmology"
+

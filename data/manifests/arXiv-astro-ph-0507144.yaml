@@ -1,0 +1,19 @@
+document_id: arxiv_astro_ph_0507144
+title: "The faint-end of the galaxy luminosity function in groups"
+document_type: publication
+year: 2006
+authors:
+  - "R. E. González"
+  - "M. Lares"
+  - "D. G. Lambas"
+  - "C. Valotto"
+source_url: https://ui.adsabs.harvard.edu/abs/2006A&A...445...51G
+source_path: data/raw/publications/arXiv-astro-ph-0507144.pdf
+visibility: public
+topics:
+  - "methods: statistical"
+  - "galaxies: clusters: general"
+  - "galaxies: luminosity function"
+  - "mass function"
+  - "Astrophysics"
+

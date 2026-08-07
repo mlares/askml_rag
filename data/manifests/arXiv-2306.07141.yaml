@@ -1,0 +1,26 @@
+document_id: arxiv_2306_07141
+title: "The VVV near-IR galaxy catalogue in a Northern part of the Galactic disc"
+document_type: publication
+year: 2023
+authors:
+  - "I. V. Daza-Perilla"
+  - "M. A. Sgró"
+  - "L. D. Baravalle"
+  - "M. V. Alonso"
+  - "C. Villalon"
+  - "M. Lares"
+  - "M. Soto"
+  - "J. L. Nilo Castellón"
+  - "C. Valotto"
+  - "P. Marchant Cortés"
+  - "D. Minniti"
+  - "M. Hempel"
+source_url: https://ui.adsabs.harvard.edu/abs/2023MNRAS.524..678D
+source_path: data/raw/publications/arXiv-2306.07141.pdf
+visibility: public
+topics:
+  - "methods: data analysis"
+  - "methods: statistical"
+  - "galaxy: general"
+  - "Astrophysics - Astrophysics of Galaxies"
+

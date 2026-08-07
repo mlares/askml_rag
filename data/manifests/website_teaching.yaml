@@ -1,0 +1,13 @@
+document_id: website_teaching
+title: Teaching and mentoring
+document_type: website
+authors:
+  - Marcelo Lares
+source_url: https://www.mlares.space/teaching/
+source_path: data/raw/website_teaching.md
+visibility: public
+topics:
+  - teaching
+  - mentoring
+  - data-science
+  - statistics

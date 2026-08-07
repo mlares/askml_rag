@@ -1,8 +1,11 @@
 import pytest
 
 from askml_rag.evaluation.retrieval import (
+    document_recall_at_k,
+    ndcg_at_k,
     precision_at_k,
     recall_at_k,
+    recall_fraction_at_k,
     reciprocal_rank_at_k,
 )
 from askml_rag.models import Chunk, EvaluationQuestion
@@ -105,3 +108,23 @@ def test_new_retrieval_metrics_reject_invalid_k() -> None:
 
     with pytest.raises(ValueError, match="greater than zero"):
         reciprocal_rank_at_k(question, [], k=0)
+
+
+def test_fractional_recall_and_ndcg_reward_complete_ranked_results() -> None:
+    question = make_question(["relevant_one", "relevant_two"])
+    results = [make_chunk("relevant_one"), make_chunk("relevant_two")]
+
+    assert recall_fraction_at_k(question, results, k=1) == 0.5
+    assert recall_fraction_at_k(question, results, k=2) == 1.0
+    assert ndcg_at_k(question, results, k=2) == 1.0
+
+
+def test_document_recall_measures_parent_document_coverage() -> None:
+    question = make_question(["relevant_chunk"])
+    question.expected_document_ids = ["paper_one", "paper_two"]
+
+    assert document_recall_at_k(
+        question,
+        ["paper_one", "other_paper"],
+        k=2,
+    ) == 0.5

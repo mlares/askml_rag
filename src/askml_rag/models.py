@@ -128,6 +128,14 @@ class QuestionCategory(StrEnum):
     false_premise = "false_premise"
 
 
+class AnswerMode(StrEnum):
+    """Evidence representation required to answer a benchmark question."""
+
+    passage = "passage"
+    metadata = "metadata"
+    unanswerable = "unanswerable"
+
+
 class ExpectedClaim(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -145,8 +153,86 @@ class EvaluationQuestion(BaseModel):
     question: str = Field(min_length=1)
     answerable: bool
     category: QuestionCategory
+    answer_mode: AnswerMode | None = None
     expected_document_ids: list[str] = Field(default_factory=list)
     relevant_chunk_ids: list[str] = Field(default_factory=list)
     expected_claims: list[ExpectedClaim] = Field(default_factory=list)
     difficulty: str = Field(min_length=1)
     notes: str | None = None
+
+    @model_validator(mode="after")
+    def validate_evidence_labels(self) -> "EvaluationQuestion":
+        if self.answer_mode is None:
+            self.answer_mode = (
+                AnswerMode.passage if self.answerable else AnswerMode.unanswerable
+            )
+
+        if self.answerable:
+            if self.answer_mode == AnswerMode.unanswerable:
+                raise ValueError("An answerable question cannot use unanswerable mode.")
+            if self.category in {
+                QuestionCategory.unanswerable,
+                QuestionCategory.false_premise,
+            }:
+                raise ValueError(
+                    "An answerable question cannot use a negative category."
+                )
+            if self.difficulty == "unanswerable":
+                raise ValueError(
+                    "An answerable question cannot use unanswerable difficulty."
+                )
+            if not self.expected_document_ids:
+                raise ValueError("An answerable question requires expected documents.")
+            if not self.expected_claims:
+                raise ValueError("An answerable question requires expected claims.")
+            if (
+                self.answer_mode == AnswerMode.passage
+                and not self.relevant_chunk_ids
+            ):
+                raise ValueError("A passage question requires relevant chunks.")
+            if (
+                self.answer_mode == AnswerMode.metadata
+                and self.relevant_chunk_ids
+            ):
+                raise ValueError(
+                    "A metadata question cannot use passage chunk labels."
+                )
+        elif any(
+            (
+                self.expected_document_ids,
+                self.relevant_chunk_ids,
+                self.expected_claims,
+            )
+        ):
+            raise ValueError("An unanswerable question cannot contain evidence labels.")
+        elif self.answer_mode != AnswerMode.unanswerable:
+            raise ValueError("An unanswerable question must use unanswerable mode.")
+        elif self.category not in {
+            QuestionCategory.unanswerable,
+            QuestionCategory.false_premise,
+        }:
+            raise ValueError("An unanswerable question requires a negative category.")
+        elif self.difficulty != "unanswerable":
+            raise ValueError(
+                "An unanswerable question requires unanswerable difficulty."
+            )
+
+        for label, values in (
+            ("expected document", self.expected_document_ids),
+            ("relevant chunk", self.relevant_chunk_ids),
+        ):
+            if len(values) != len(set(values)):
+                raise ValueError(f"Duplicate {label} labels are not allowed.")
+
+        expected_document_ids = set(self.expected_document_ids)
+        for claim in self.expected_claims:
+            if len(claim.source_document_ids) != len(
+                set(claim.source_document_ids)
+            ):
+                raise ValueError("Duplicate claim source labels are not allowed.")
+            if not set(claim.source_document_ids) <= expected_document_ids:
+                raise ValueError(
+                    "Every claim source must be an expected document."
+                )
+
+        return self

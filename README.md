@@ -8,9 +8,30 @@ answer.
 
 The repository currently implements corpus normalization, PDF and Markdown
 ingestion, publication metadata generation, chunking, BM25 and semantic
-retrieval, hybrid reciprocal-rank fusion, local Qdrant indexing, and a
-machine-readable retrieval evaluation runner. Answer generation, the API, and
-the user interface are the next major development stages.
+retrieval, hybrid reciprocal-rank fusion, local Qdrant indexing, a
+machine-readable retrieval evaluation runner, and a provider-neutral grounded
+generation contract. The generation layer validates structured citations against
+the exact retrieved context and abstains when evidence is missing or invalid.
+An OpenAI Responses API adapter provides real structured generation over the
+local corpus. A FastAPI endpoint and same-origin web interface provide a local
+end-to-end application with citations, conservative abstention, rate limiting,
+request IDs, provider timeouts, and privacy-safe request logs.
+
+## Current application boundary
+
+The local application is intentionally a public-corpus assistant, not a
+general web-search chatbot. It serves a browser interface at `GET /` and a
+machine-readable endpoint at `POST /ask`. The server runs BM25 retrieval over
+the evaluated full-text corpus (`k=7`), calls the grounded generator, and
+returns an answer with literal source quotes or an evidence-based abstention.
+
+The public interface tells visitors that the corpus may be incomplete and that
+they should verify citations and not submit private, sensitive, or confidential
+information. `POST /ask` is rate limited to 10 requests per client per minute;
+responses include `X-Request-ID`, and logs exclude request content and secrets.
+These are single-process safeguards for the portfolio deployment, not a
+substitute for a production privacy policy, distributed rate limiter, or access
+control.
 
 ## Start here
 
@@ -188,3 +209,14 @@ For each change:
 The complete ordered workflow, evaluation interpretation, and roadmap are in
 [docs/development.md](docs/development.md). The product boundary is defined in
 [docs/project_scope.md](docs/project_scope.md).
+
+The grounded-generation contract and its validation behavior are described in
+[docs/generation.md](docs/generation.md). The local OpenAI setup, request
+flow, security boundaries, and verification commands are in
+[docs/openai_integration.md](docs/openai_integration.md). The FastAPI endpoint
+and local HTTP workflow are in [docs/api.md](docs/api.md). The built-in web
+interface and its architecture are described in [docs/web_ui.md](docs/web_ui.md).
+Operational safeguards and their deployment limits are described in
+[docs/operations.md](docs/operations.md). The OpenAI model-usage and
+cost-estimation probe is documented in
+[docs/openai_integration.md](docs/openai_integration.md).

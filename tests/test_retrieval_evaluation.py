@@ -31,7 +31,14 @@ def make_question(relevant_chunk_ids: list[str]) -> EvaluationQuestion:
         question="Example question?",
         answerable=True,
         category="direct_fact",
+        expected_document_ids=["example_source"],
         relevant_chunk_ids=relevant_chunk_ids,
+        expected_claims=[
+            {
+                "claim": "The example source supports the answer.",
+                "source_document_ids": ["example_source"],
+            }
+        ],
         difficulty="easy",
     )
 

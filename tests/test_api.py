@@ -1,0 +1,176 @@
+import time
+
+from fastapi.testclient import TestClient
+
+from askml_rag.api.app import AskResponse, AskService, OperationalSettings, create_app
+from askml_rag.generation.grounded import GroundedGenerator, LLMGenerationResponse, StaticLLM
+from askml_rag.models import Chunk
+from askml_rag.retrieval.bm25 import BM25Retriever
+
+
+def make_chunk() -> Chunk:
+    return Chunk(
+        chunk_id="website_projects_chunk_001",
+        document_id="website_projects",
+        chunk_index=0,
+        document_content_hash="a" * 64,
+        title="Selected projects",
+        document_type="website",
+        source_url="https://www.mlares.space/projects/",
+        text="Marcelo built reproducible data-processing pipelines with validation rules.",
+    )
+
+
+def make_decoy_chunk(chunk_id: str, text: str) -> Chunk:
+    return Chunk(
+        chunk_id=chunk_id,
+        document_id=chunk_id.removesuffix("_chunk_001"),
+        chunk_index=0,
+        document_content_hash="b" * 64,
+        title="Unrelated source",
+        document_type="website",
+        text=text,
+    )
+
+
+def make_client(settings: OperationalSettings | None = None) -> TestClient:
+    llm = StaticLLM(
+        LLMGenerationResponse(
+            answerable=True,
+            answer="Marcelo built reproducible data-processing pipelines.",
+            claims=[
+                {
+                    "text": "Marcelo built reproducible data-processing pipelines.",
+                    "citation_ids": ["website_projects_chunk_001"],
+                }
+            ],
+            citations=[
+                {
+                    "chunk_id": "website_projects_chunk_001",
+                    "quote": "built reproducible data-processing pipelines",
+                }
+            ],
+        )
+    )
+    service = AskService(
+        BM25Retriever(
+            [
+                make_chunk(),
+                make_decoy_chunk("teaching_chunk_001", "This source describes teaching."),
+                make_decoy_chunk("biography_chunk_001", "This source contains a biography."),
+            ]
+        ),
+        GroundedGenerator(llm),
+    )
+    return TestClient(create_app(service, settings=settings))
+
+
+def test_post_ask_runs_bm25_and_returns_a_grounded_answer() -> None:
+    response = make_client().post(
+        "/ask",
+        json={"question": "Which reproducible data-processing pipelines did Marcelo build?"},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["answerable"] is True
+    assert payload["retriever"] == "bm25"
+    assert payload["retrieval_limit"] == 7
+    assert payload["retrieved_chunk_ids"] == ["website_projects_chunk_001"]
+    assert payload["citations"][0]["chunk_id"] == "website_projects_chunk_001"
+
+
+def test_get_root_serves_the_web_interface() -> None:
+    response = make_client().get("/")
+
+    assert response.status_code == 200
+    assert "AskML RAG" in response.text
+    assert "/static/app.js" in response.text
+    assert "do not submit private, sensitive, or confidential information" in response.text
+    assert "About this assistant" in response.text
+    assert "Questions are not retained in application request logs" in response.text
+
+
+def test_get_static_javascript_serves_the_api_client() -> None:
+    response = make_client().get("/static/app.js")
+
+    assert response.status_code == 200
+    assert "fetch(\"/ask\"" in response.text
+
+
+def test_post_ask_rejects_invalid_request_data() -> None:
+    response = make_client().post("/ask", json={"question": "   "})
+
+    assert response.status_code == 422
+    assert "question must contain non-whitespace text" in response.text
+
+
+def test_post_ask_rejects_unexpected_request_fields() -> None:
+    response = make_client().post(
+        "/ask",
+        json={
+            "question": "Which reproducible data-processing pipelines did Marcelo build?",
+            "limit": 20,
+        },
+    )
+
+    assert response.status_code == 422
+
+
+def test_post_ask_rate_limits_one_client() -> None:
+    client = make_client(
+        OperationalSettings(
+            rate_limit_requests=1,
+            rate_limit_window_seconds=60,
+            request_timeout_seconds=1,
+        )
+    )
+    payload = {"question": "Which reproducible data-processing pipelines did Marcelo build?"}
+
+    assert client.post("/ask", json=payload).status_code == 200
+    limited = client.post("/ask", json=payload)
+
+    assert limited.status_code == 429
+    assert limited.headers["Retry-After"] == "60"
+    assert limited.headers["X-Request-ID"]
+
+
+def test_request_logging_omits_question_and_headers(caplog) -> None:
+    secret_question = "This text must not appear in logs."
+
+    with caplog.at_level("INFO", logger="askml_rag.api"):
+        response = make_client().post(
+            "/ask",
+            json={"question": secret_question},
+            headers={"Authorization": "Bearer must-not-appear"},
+        )
+
+    assert response.status_code == 200
+    assert response.headers["X-Request-ID"]
+    log_output = caplog.text
+    assert "event=http_request" in log_output
+    assert secret_question not in log_output
+    assert "must-not-appear" not in log_output
+
+
+def test_post_ask_times_out_before_a_slow_service_finishes() -> None:
+    class SlowService:
+        def ask(self, question: str) -> AskResponse:
+            time.sleep(0.05)
+            raise AssertionError(question)
+
+    client = TestClient(
+        create_app(
+            SlowService(),  # type: ignore[arg-type]
+            settings=OperationalSettings(
+                rate_limit_requests=10,
+                rate_limit_window_seconds=60,
+                request_timeout_seconds=0.001,
+            ),
+        )
+    )
+
+    response = client.post("/ask", json={"question": "Will this timeout?"})
+
+    assert response.status_code == 504
+    assert response.headers["X-Request-ID"]

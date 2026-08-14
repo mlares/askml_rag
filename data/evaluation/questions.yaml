@@ -1,0 +1,1239 @@
+questions:
+
+  - question_id: recommendation_experience_001
+    question: What experience does Marcelo have with recommendation systems?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_home
+      - website_projects
+      - skills
+    relevant_chunk_ids:
+      - skills_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo was the primary data-science owner for a production online
+          ranking model serving recommendations at Mercado Libre.
+        source_document_ids:
+          - website_home
+          - website_projects
+      - claim: >
+          The model served millions of users across Argentina, Brazil, and
+          Mexico.
+        source_document_ids:
+          - website_home
+          - website_projects
+    difficulty: multi_document
+    notes: >
+      Drafted from questions_base.csv. Do not use its unsupported claim about
+      six countries; the indexed website supports three LATAM markets.
+
+  - question_id: work_atmosphere_001
+    question: What does Marcelo expect from a work atmosphere?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      The answer proposed in questions_base.csv concerns personal preferences.
+      No reviewed, indexed public source currently supports it.
+
+  - question_id: python_experience_001
+    question: What Python experience does Marcelo have?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - skills
+      - website_home
+      - website_projects
+      - website_research
+      - website_teaching
+    relevant_chunk_ids:
+      - skills_chunk_000
+      - website_home_chunk_000
+      - website_home_chunk_001
+    expected_claims:
+      - claim: >
+          Marcelo has used Python in scientific software and data-processing
+          pipelines.
+        source_document_ids:
+          - website_projects
+          - website_research
+      - claim: >
+          Marcelo has used Python in applied machine-learning and production
+          data-science work.
+        source_document_ids:
+          - website_projects
+    difficulty: multi_document
+    notes: >
+      The indexed sources support Python experience but not the exact
+      quantitative claim of more than ten years from questions_base.csv.
+
+  - question_id: deep_learning_experience_001
+    question: What deep-learning experience does Marcelo have?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - skills
+      - website_home
+      - website_projects
+    relevant_chunk_ids:
+      - skills_chunk_000
+      - skills_chunk_001
+      - website_home_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo developed a PyTorch production ranking model at Mercado
+          Libre.
+        source_document_ids:
+          - website_home
+          - website_projects
+      - claim: >
+          Marcelo worked on DEEPz using deep-learning techniques including
+          transfer learning, mixture density networks, autoencoders, and
+          ensemble models.
+        source_document_ids:
+          - website_projects
+    difficulty: multi_document
+    notes: Drafted from questions_base.csv and expanded with cited public evidence.
+
+  - question_id: kubernetes_experience_001
+    question: What experience does Marcelo have with Kubernetes?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      Absence of Kubernetes in the indexed public corpus is not evidence of no
+      experience. The system should state that it lacks supporting evidence.
+
+  - question_id: terraform_experience_001
+    question: What experience does Marcelo have with Terraform?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      Absence of Terraform in the indexed public corpus is not evidence of no
+      experience. The system should state that it lacks supporting evidence.
+
+  - question_id: gcp_services_001
+    question: Which GCP services are documented in Marcelo's indexed public corpus?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - skills
+    relevant_chunk_ids:
+      - skills_chunk_002
+      - skills_chunk_003
+    expected_claims:
+      - claim: >
+          The indexed skills document lists Google Compute Engine, Google Cloud
+          Storage, and BigQuery.
+        source_document_ids:
+          - skills
+    difficulty: direct
+    notes: >
+      The indexed skills document explicitly lists these services. This is not
+      evidence of the depth or duration of experience with each service.
+
+  - question_id: unsupported_computing_cost_001
+    question: What was the exact computing cost of the TOROS pipeline?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: No indexed public source should support this claim.
+
+  - question_id: teaching_001
+    question: What teaching experience does Marcelo have in statistics?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_teaching
+      - website_projects
+    relevant_chunk_ids:
+      - website_teaching_chunk_001
+      - website_projects_chunk_012
+    expected_claims:
+      - claim: >
+          Marcelo has taught probability and statistics and designed university
+          material in statistics over a 20-year teaching career.
+        source_document_ids:
+          - website_teaching
+          - website_projects
+    difficulty: direct
+    notes:
+
+  - question_id: teaching_002
+    question: What teaching experience does Marcelo have in data science?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_teaching
+      - website_projects
+    relevant_chunk_ids:
+      - website_teaching_chunk_000
+      - website_projects_chunk_012
+    expected_claims:
+      - claim: >
+          Marcelo is head of the Data Science course in the Applied Mathematics
+          department and has designed and taught data-science material.
+        source_document_ids:
+          - website_teaching
+          - website_projects
+    difficulty: direct
+    notes:
+
+  - question_id: teaching_003
+    question: What teaching experience does Marcelo have?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_teaching
+      - website_home
+    relevant_chunk_ids:
+      - website_teaching_chunk_000
+      - website_teaching_chunk_001
+      - website_home_chunk_003
+    expected_claims:
+      - claim: >
+          Marcelo has 20 years of university teaching experience spanning data
+          science, statistics, computation, and astronomy.
+        source_document_ids:
+          - website_teaching
+      - claim: Marcelo has supervised doctoral and undergraduate researchers.
+        source_document_ids:
+          - website_teaching
+          - website_home
+    difficulty: direct
+    notes:
+
+
+  - question_id: production_001
+    question: What software products has Marcelo produced?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_research
+      - website_projects
+    relevant_chunk_ids:
+      - website_research_chunk_000
+      - website_research_chunk_001
+      - website_research_chunk_002
+      - website_projects_chunk_010
+    expected_claims:
+      - claim: >
+          Marcelo has contributed to scientific software including HEARSAY,
+          AEGIS, PINNACLE, CORRAL, PROPERIMAGE, and GriSPy.
+        source_document_ids:
+          - website_research
+      - claim: >
+          He has also developed reproducible data pipelines and visual analytics
+          tools as research-engineering products.
+        source_document_ids:
+          - website_projects
+    difficulty: direct
+    notes:
+
+  - question_id: production_002
+    question: What papers has Marcelo published in statistical research?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_research
+    relevant_chunk_ids:
+      - website_research_chunk_000
+      - website_research_chunk_001
+    expected_claims:
+      - claim: >
+          His indexed statistical research includes work on two-point correlation
+          estimation, drifting-feature detection, and fixed-radius nearest-neighbor
+          search with GriSPy.
+        source_document_ids:
+          - website_research
+    difficulty: direct
+    notes:
+
+  - question_id: production_003
+    question: What is Marcelo Lares's Google Scholar profile?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_research
+    relevant_chunk_ids:
+      - website_research_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo's Google Scholar profile is available at
+          https://scholar.google.com/citations?user=L-ZXg3kAAAAJ.
+        source_document_ids:
+          - website_research
+    difficulty: direct
+    notes:
+
+  - question_id: production_004
+    question: Has Marcelo taught data science?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_projects
+      - website_teaching
+    relevant_chunk_ids:
+      - website_projects_chunk_012
+      - website_teaching_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo is head of the Data Science course in the Applied Mathematics
+          department and has designed and taught data-science material.
+        source_document_ids:
+          - website_projects
+          - website_teaching
+    difficulty: direct
+    notes: Reviewed against the teaching and projects pages.
+
+  - question_id: production_005
+    question: Has Marcelo taught statistics?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_projects
+      - website_teaching
+    relevant_chunk_ids:
+      - website_projects_chunk_012
+      - website_teaching_chunk_001
+    expected_claims:
+      - claim: >
+          Marcelo has taught probability and statistics and has designed
+          university material in statistics.
+        source_document_ids:
+          - website_projects
+          - website_teaching
+    difficulty: direct
+    notes: Reviewed against website_project
+
+
+  - question_id: sports_experience_001
+    question: What evidence is there for sports performance?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      Absence of evidence in the indexed public corpus.
+      The system should state that it lacks supporting evidence.
+
+  - question_id: politics_experience_001
+    question: What evidence is there for participation in politics?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      Absence of evidence in the indexed public corpus.
+      The system should state that it lacks supporting evidence.
+
+  - question_id: work_001
+    question: Did Marcelo hold a postdoctoral fellowship at CONICET?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_research
+    relevant_chunk_ids:
+      - website_research_chunk_001
+    expected_claims:
+      - claim: >
+          Marcelo held a CONICET postdoctoral fellowship from 2009 to 2011,
+          working on characterization of the Universe's large-scale structure.
+        source_document_ids:
+          - website_research
+    difficulty: direct
+    notes: Reviewed against website_research
+
+  - question_id: work_002
+    question: Did Marcelo hold a researcher position at CONICET?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_home
+    relevant_chunk_ids:
+      - website_home_chunk_003
+    expected_claims:
+      - claim: >
+          Marcelo was a CONICET researcher from 2004 through 2023 and applied
+          statistical and computational methods to astronomical datasets.
+        source_document_ids:
+          - website_home
+    difficulty: direct
+    notes: Reviewed against website_research
+
+  - question_id: work_003
+    question: Did Marcelo participate in evaluation activities at CONICET?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_teaching
+    relevant_chunk_ids:
+      - website_teaching_chunk_001
+    expected_claims:
+      - claim: >
+          Marcelo performed peer-review evaluation for CONICET research-career
+          positions.
+        source_document_ids:
+          - website_teaching
+    difficulty: direct
+    notes: Reviewed against website_teaching
+
+  - question_id: work_004
+    question: Has Marcelo been involved in editorial activities?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - cv_meetings
+    relevant_chunk_ids:
+      - cv_meetings_chunk_016
+    expected_claims:
+      - claim: >
+          Marcelo served on the editorial committee of the Bulletin of the
+          Argentine Astronomical Association as a technical editor.
+        source_document_ids:
+          - cv_meetings
+    difficulty: direct
+    notes: Reviewed against website_research
+
+  - question_id: industry_001
+    question: What industry experience does Marcelo have?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_home
+      - website_projects
+    relevant_chunk_ids:
+      - website_home_chunk_001
+      - website_home_chunk_002
+      - website_projects_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo owned production recommendation work at Mercado Libre and later
+          led an eight-person data-science team at IThreex Global.
+        source_document_ids:
+          - website_home
+          - website_projects
+    difficulty: multi_document
+    notes: Reviewed against the industry experience summaries on the home and projects pages.
+
+  - question_id: industry_002
+    question: Did Marcelo work at IThreex?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_home
+      - website_projects
+    relevant_chunk_ids:
+      - website_home_chunk_000
+      - website_home_chunk_002
+      - website_projects_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo worked as Lead Data Scientist at IThreex Global from 2022 to
+          2024 and led an eight-person team.
+        source_document_ids:
+          - website_home
+          - website_projects
+    difficulty: direct
+    notes: Reviewed against website_research
+
+  - question_id: industry_003
+    question: Did Marcelo work at Mercado Libre?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_home
+      - website_projects
+    relevant_chunk_ids:
+      - website_home_chunk_000
+      - website_home_chunk_001
+      - website_projects_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo worked at Mercado Libre as the primary data-science owner of a
+          production recommendation-ranking model.
+        source_document_ids:
+          - website_home
+          - website_projects
+    difficulty: multi_document
+    notes: Reviewed against website_home and website_research
+
+  - question_id: industry_006
+    question: Does Marcelo have experience with international trade systems?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_home
+    relevant_chunk_ids:
+      - website_home_chunk_002
+    expected_claims:
+      - claim: >
+          At IThreex Global, Marcelo led client-facing analytics work that
+          included international-trade applications.
+        source_document_ids:
+          - website_home
+    difficulty: direct
+    notes: Participated in the development of a dashboard for international trading
+
+  - question_id: industry_007
+    question: Does Marcelo have experience with time-series modeling?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_projects
+      - skills
+    relevant_chunk_ids:
+      - website_projects_chunk_004
+      - skills_chunk_000
+    expected_claims:
+      - claim: >
+          Marcelo developed machine-learning methods for irregular astronomical
+          time series and worked on forecasting applications.
+        source_document_ids:
+          - website_projects
+          - skills
+    difficulty: multi_document
+    notes: The indexed corpus supports time-series experience through forecasting and variable-star classification work.
+
+  - question_id: leadership_006
+    question: What leadership experience does Marcelo have?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_007
+      - website_projects_chunk_008
+      - website_projects_chunk_009
+      - website_projects_chunk_010
+      - website_projects_chunk_011
+      - website_projects_chunk_012
+    expected_claims:
+      - claim: >
+          Marcelo led an eight-person data-science team, defined technical
+          roadmaps and OKRs, mentored data scientists, and acted as technical
+          contact for client projects.
+        source_document_ids:
+          - website_projects
+    difficulty: direct
+    notes: Reviewed against website_projects
+
+  - question_id: not_experience_002
+    question: What experience does Marcelo have with Apache Kafka?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      Absence of Kafka in the indexed public corpus is not evidence of no
+      experience. The system should state that it lacks supporting evidence.
+
+  - question_id: not_experience_003
+    question: What experience does Marcelo have with Databricks?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+      Absence of Databricks in the indexed public corpus is not evidence of no
+      experience. The system should state that it lacks supporting evidence.
+
+  - question_id: papers_000
+    question: Did Marcelo coauthor papers with Sebastián Gurovich?
+    answerable: true
+    category: multi_document
+    answer_mode: metadata
+    expected_document_ids:
+      - arxiv_1607_07850
+      - arxiv_1701_05566
+      - arxiv_1710_05844
+      - arxiv_1812_10518
+      - arxiv_1901_02960
+      - arxiv_2105_01714
+      - arxiv_2406_16646
+    relevant_chunk_ids: []
+    expected_claims:
+      - claim: >
+          Marcelo coauthored seven publications in the selected corpus with
+          Sebastián Gurovich.
+        source_document_ids:
+          - arxiv_1607_07850
+          - arxiv_1701_05566
+          - arxiv_1710_05844
+          - arxiv_1812_10518
+          - arxiv_1901_02960
+          - arxiv_2105_01714
+          - arxiv_2406_16646
+    difficulty: multi_document
+    notes: >
+      This is a deterministic author-aggregation question over publication
+      metadata, not a top-k full-text counting task.
+
+  - question_id: papers_001
+    question: Who has Marcelo coauthored papers about cosmic voids with?
+    answerable: true
+    category: multi_document
+    answer_mode: metadata
+    expected_document_ids:
+      - arxiv_1306_5798
+      - arxiv_1306_5799
+      - arxiv_1410_8186
+      - arxiv_1501_02120
+      - arxiv_1510_00712
+      - arxiv_1511_06741
+      - arxiv_1703_10428
+      - arxiv_1705_06541
+      - arxiv_2202_13249
+    relevant_chunk_ids: []
+    expected_claims:
+      - claim: >
+          Across the selected cosmic-void publications, Marcelo's coauthors
+          include Laura Ceccarelli, Dante Paz, Nelson Padilla, Diego García
+          Lambas, Yan-Chuan Cai, Baojiu Li, Andrés N. Ruiz, Heliana E.
+          Luparello, Victoria E. Maldonado, and Federico Dávila-Kurbán.
+        source_document_ids:
+          - arxiv_1306_5798
+          - arxiv_1306_5799
+          - arxiv_1410_8186
+          - arxiv_1501_02120
+          - arxiv_1510_00712
+          - arxiv_1511_06741
+          - arxiv_1703_10428
+          - arxiv_1705_06541
+          - arxiv_2202_13249
+    difficulty: multi_document
+    notes: >
+      Author spellings and initials should be normalized before deduplication.
+
+  - question_id: papers_002
+    question: Did Marcelo work on future virialized structures?
+    answerable: true
+    category: direct_fact
+    answer_mode: metadata
+    expected_document_ids:
+      - arxiv_1101_1961
+    relevant_chunk_ids: []
+    expected_claims:
+      - claim: >
+          Marcelo coauthored “Future virialized structures: an analysis of
+          superstructures in the SDSS-DR7” with H. Luparello, D. G. Lambas,
+          and N. Padilla.
+        source_document_ids:
+          - arxiv_1101_1961
+    difficulty: direct
+    notes: >
+      This is a publication-discovery question answerable from title, authors,
+      and abstract metadata.
+
+
+  - question_id: papers_003
+    question: Which publications document Marcelo's work on astronomical binary systems?
+    answerable: true
+    category: multi_document
+    answer_mode: metadata
+    expected_document_ids:
+      - arxiv_1602_08492
+      - arxiv_1607_07850
+      - arxiv_1710_05833
+      - arxiv_1901_02960
+      - arxiv_2302_01200
+    relevant_chunk_ids: []
+    expected_claims:
+      - claim: >
+          Marcelo coauthored work on compact-binary gravitational-wave events
+          and their electromagnetic follow-up.
+        source_document_ids:
+          - arxiv_1602_08492
+          - arxiv_1607_07850
+          - arxiv_1710_05833
+          - arxiv_1901_02960
+      - claim: >
+          Marcelo also coauthored work on automated classification of eclipsing
+          binary systems in the VVV Survey.
+        source_document_ids:
+          - arxiv_2302_01200
+    difficulty: multi_document
+    notes: >
+      “Binary systems” is interpreted as compact-object mergers and eclipsing
+      stellar binaries documented in publication metadata.
+
+  - question_id: papers_004
+    question: What is the experience of Marcelo on protein folding?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+
+  - question_id: papers_005
+    question: What papers did Marcelo coauthor with Geoffrey Hinton?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: >
+
+  - question_id: papers_007
+    question: What are the main results of his research on communicating galactic civilisations?
+    answerable: true
+    category: direct_fact
+    expected_document_ids:
+      - arxiv_2007_03597
+    relevant_chunk_ids:
+      - arxiv_2007_03597_chunk_000
+      - arxiv_2007_03597_chunk_001
+    expected_claims:
+      - claim: >
+          The research used Monte Carlo simulations to estimate probabilities
+          of causal contact between communicating civilizations in the Galaxy.
+        source_document_ids:
+          - arxiv_2007_03597
+      - claim: >
+          It found that the maximum probability of contact occurs when a
+          civilization discovers the required communication technology.
+        source_document_ids:
+          - arxiv_2007_03597
+    difficulty: direct
+    notes: >
+      This question requires paper-content evidence rather than metadata alone.
+
+  - question_id: papers_008
+    question: How many selected papers did Marcelo publish in Astronomy & Astrophysics?
+    answerable: true
+    category: quantitative
+    answer_mode: metadata
+    expected_document_ids:
+      - arxiv_1511_05451
+      - arxiv_2105_01714
+      - arxiv_2403_03098
+      - arxiv_2406_16646
+      - arxiv_2408_16864
+      - arxiv_2506_19231
+      - arxiv_astro_ph_0507144
+    relevant_chunk_ids: []
+    expected_claims:
+      - claim: >
+          The selected corpus contains seven Marcelo Lares publications in
+          Astronomy & Astrophysics.
+        source_document_ids:
+          - arxiv_1511_05451
+          - arxiv_2105_01714
+          - arxiv_2403_03098
+          - arxiv_2406_16646
+          - arxiv_2408_16864
+          - arxiv_2506_19231
+          - arxiv_astro_ph_0507144
+    difficulty: aggregation
+    notes: >
+      Count normalized journal metadata exactly; do not infer a complete count
+      from top-k passages.
+
+
+
+
+
+# The following questions are reverse-authored. Each answerable
+# entry was derived by inspecting its labelled chunks, rather than by asking a
+# retriever to suggest evidence.  Review wording and claims before merging
+# selected entries into the official benchmark and regenerating corpus_index.
+  # Approach 1: contrast two evidence-backed tasks or systems.
+  - question_id: comparison_deepz_vvv_001
+    question: >
+      How did the machine-learning task and methods differ between the VVV/VVVX
+      galaxy work and DEEPz?
+    answerable: true
+    answer_mode: passage
+    category: comparison
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_004
+      - website_projects_chunk_006
+    expected_claims:
+      - claim: >
+          The VVV/VVVX work identifies faint extended objects in crowded
+          near-infrared images using CNNs and XGBoost with photometric and
+          morphological features.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          DEEPz estimates continuous photometric redshifts from noisy,
+          incomplete measurements using transfer learning, mixture density
+          networks, autoencoders, and ensemble models.
+        source_document_ids:
+          - website_projects
+    difficulty: comparison
+    notes: Reverse-authored contrast between classification/detection and regression.
+
+  - question_id: comparison_corral_crossmatching_001
+    question: >
+      How do Corral and the astronomical cross-matching work address different
+      data-engineering problems?
+    answerable: true
+    answer_mode: passage
+    category: comparison
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_002
+      - website_projects_chunk_009
+    expected_claims:
+      - claim: >
+          Corral is a SQL-backed Python framework for reproducible,
+          staged data-processing pipelines with data models, alerts, and
+          quality metrics.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          The cross-matching work resolves uncertain identities across
+          heterogeneous catalogs using approximate nearest-neighbor search,
+          reconciliation rules, and quality checks.
+        source_document_ids:
+          - website_projects
+    difficulty: comparison
+    notes: Reverse-authored platform-engineering versus entity-resolution comparison.
+
+  - question_id: comparison_void_spin_001
+    question: >
+      What is the difference between the cosmic-void detection work and the
+      galaxy-spin alignment analysis in their inference approach?
+    answerable: true
+    answer_mode: passage
+    category: comparison
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_007
+      - website_projects_chunk_008
+    expected_claims:
+      - claim: >
+          Cosmic-void work discovers low-density regions in three-dimensional
+          point-cloud data using clustering, density estimation, geometry, and
+          validation against simulations.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          Galaxy-spin alignment work tests a correlation hypothesis using a
+          null model, Monte Carlo simulations, correlation analysis, and
+          uncertainty quantification.
+        source_document_ids:
+          - website_projects
+    difficulty: comparison
+    notes: Reverse-authored unsupervised-discovery versus hypothesis-testing comparison.
+
+  - question_id: comparison_arcovid_catalog_001
+    question: >
+      How did Arcovid19 and the VVV galaxy-catalogue work differ in the data
+      products they built?
+    answerable: true
+    answer_mode: passage
+    category: comparison
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_003
+      - website_projects_chunk_005
+    expected_claims:
+      - claim: >
+          Arcovid19 integrated epidemiological data, statistical analyses, and
+          interactive visualizations into public decision-support products.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          The VVV catalogue work transformed noisy infrared detections into a
+          validated, searchable, documented scientific dataset.
+        source_document_ids:
+          - website_projects
+    difficulty: comparison
+    notes: Reverse-authored comparison of decision-support and catalogue products.
+
+  # Approach 2: ask for ordered or dated evidence rather than a static fact.
+  - question_id: temporal_education_001
+    question: >
+      What was the sequence from Marcelo's astronomy doctorate to his CONICET
+      postdoctoral work?
+    answerable: true
+    answer_mode: passage
+    category: temporal
+    expected_document_ids:
+      - cv_education
+    relevant_chunk_ids:
+      - cv_education_chunk_000
+      - cv_education_chunk_001
+    expected_claims:
+      - claim: >
+          Marcelo completed a Doctorate in Astronomy at Universidad Nacional de
+          Córdoba from 2003 to 2009, with a thesis on low-luminosity satellite
+          galaxies.
+        source_document_ids:
+          - cv_education
+      - claim: >
+          He then held a CONICET postdoctoral position from 2009 to 2011 on
+          the characterization of the Universe's large-scale structure.
+        source_document_ids:
+          - cv_education
+    difficulty: temporal
+    notes: Reverse-authored chronological reasoning from consecutive CV chunks.
+
+  - question_id: temporal_training_001
+    question: >
+      Which documented training came first: scientific programming with Python
+      or the AWSome Day cloud-computing course?
+    answerable: true
+    answer_mode: passage
+    category: temporal
+    expected_document_ids:
+      - cv_education
+    relevant_chunk_ids:
+      - cv_education_chunk_002
+      - cv_education_chunk_003
+    expected_claims:
+      - claim: >
+          The scientific-programming-with-Python course ran from July through
+          December 2014.
+        source_document_ids:
+          - cv_education
+      - claim: >
+          AWSome Day was a one-day online conference attended in June 2021.
+        source_document_ids:
+          - cv_education
+    difficulty: temporal
+    notes: Tests date comparison and avoids treating course attendance as certification.
+
+  - question_id: temporal_publication_span_001
+    question: >
+      Which indexed research topics appear at the early and recent ends of the
+      publication record shown in the CV?
+    answerable: true
+    answer_mode: passage
+    category: temporal
+    expected_document_ids:
+      - cv_papers
+    relevant_chunk_ids:
+      - cv_papers_chunk_000
+      - cv_papers_chunk_006
+    expected_claims:
+      - claim: >
+          The CV lists 2004 work on dynamical segregation of galaxies into
+          groups and clusters.
+        source_document_ids:
+          - cv_papers
+      - claim: >
+          The recent end shown includes 2023 work on eclipsing-binary
+          classification, CMB photons in extended galaxy haloes, and spin
+          alignment around voids.
+        source_document_ids:
+          - cv_papers
+    difficulty: temporal
+    notes: Reverse-authored temporal span; response should not infer an exhaustive career history.
+
+  - question_id: temporal_events_001
+    question: >
+      How did Marcelo's documented participation differ between the 2016
+      national astronomy meeting and the 2018 Friends of Friends Meeting?
+    answerable: true
+    answer_mode: passage
+    category: temporal
+    expected_document_ids:
+      - cv_meetings
+    relevant_chunk_ids:
+      - cv_meetings_chunk_000
+      - cv_meetings_chunk_001
+    expected_claims:
+      - claim: >
+          At the 2016 national astronomy meeting, the CV records talks and
+          posters, including two talks as a conference speaker.
+        source_document_ids:
+          - cv_meetings
+      - claim: >
+          At the 2018 international Friends of Friends Meeting, the CV records
+          scientific and organizing roles, including coordination of the
+          organizing committee.
+        source_document_ids:
+          - cv_meetings
+    difficulty: temporal
+    notes: Reverse-authored role comparison across dates.
+
+  # Approach 3: require synthesis across related evidence, not a lookup.
+  - question_id: multi_document_uncertainty_001
+    question: >
+      What evidence shows work on decision-making under uncertainty in both
+      transient astronomy and public-health analytics?
+    answerable: true
+    answer_mode: passage
+    category: multi_document
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_002
+      - website_projects_chunk_003
+    expected_claims:
+      - claim: >
+          The TOROS work used difference imaging, candidate detection,
+          statistical prioritization, and validation to find rare transient
+          signals under tight follow-up windows.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          Arcovid19 combined data curation, reconciliation, statistical
+          analysis, scenario generation, benchmarking, and reporting for
+          public-facing interpretation under uncertainty.
+        source_document_ids:
+          - website_projects
+    difficulty: multi_document
+    notes: Reverse-authored cross-domain synthesis.
+
+  - question_id: multi_document_reusable_software_001
+    question: >
+      What evidence supports Marcelo's experience building reusable and
+      maintainable scientific software, beyond a single named package?
+    answerable: true
+    answer_mode: passage
+    category: multi_document
+    expected_document_ids:
+      - website_projects
+      - website_research
+    relevant_chunk_ids:
+      - website_projects_chunk_010
+      - website_projects_chunk_011
+      - website_research_chunk_002
+    expected_claims:
+      - claim: >
+          The projects material describes reusable scientific software with
+          library design, automation, documentation, packaging, testing, and
+          reproducibility practices.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          The research page identifies named software including HEARSAY, AEGIS,
+          PINNACLE, CORRAL, PROPERIMAGE, and GriSPy.
+        source_document_ids:
+          - website_research
+    difficulty: multi_document
+    notes: Reverse-authored broad-evidence question; it should not overclaim sole authorship.
+
+  - question_id: multi_document_mentoring_evaluation_001
+    question: >
+      What evidence documents both mentoring and formal evaluation work in
+      Marcelo's academic activities?
+    answerable: true
+    answer_mode: passage
+    category: multi_document
+    expected_document_ids:
+      - website_teaching
+      - cv_outreach
+    relevant_chunk_ids:
+      - website_teaching_chunk_001
+      - cv_outreach_chunk_000
+    expected_claims:
+      - claim: >
+          The teaching material documents PhD and undergraduate supervision,
+          as well as advising and co-advising researchers.
+        source_document_ids:
+          - website_teaching
+      - claim: >
+          The CV documents roles evaluating theses, teaching appointments, and
+          CONICET researcher-career applications.
+        source_document_ids:
+          - cv_outreach
+    difficulty: multi_document
+    notes: Reverse-authored synthesis of mentorship and service evidence.
+
+  - question_id: multi_document_data_product_001
+    question: >
+      How do the public materials connect Marcelo's statistics and data-mining
+      expertise to durable, auditable data products?
+    answerable: true
+    answer_mode: passage
+    category: multi_document
+    expected_document_ids:
+      - cv_expertise
+      - website_projects
+    relevant_chunk_ids:
+      - cv_expertise_chunk_000
+      - website_projects_chunk_009
+      - website_projects_chunk_010
+    expected_claims:
+      - claim: >
+          The public CV describes expertise in statistics, programming,
+          large-volume data processing, data mining, and data visualization.
+        source_document_ids:
+          - cv_expertise
+      - claim: >
+          The projects material describes reproducible pipelines that validate,
+          enrich, and publish structured datasets with metadata and quality
+          controls.
+        source_document_ids:
+          - website_projects
+    difficulty: multi_document
+    notes: Reverse-authored bridge between a profile claim and concrete engineering practice.
+
+  # Approach 4: deliberately ambiguous wording that a grounded assistant must resolve.
+  - question_id: ambiguous_catalog_001
+    question: >
+      When the corpus refers to “catalog work,” does it mean creating a galaxy
+      catalog or matching records between existing catalogs?
+    answerable: true
+    answer_mode: passage
+    category: ambiguous
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_005
+      - website_projects_chunk_009
+    expected_claims:
+      - claim: >
+          The VVV work creates a validated galaxy catalog from infrared survey
+          detections.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          The cross-matching work links records describing overlapping objects
+          across existing heterogeneous catalogs.
+        source_document_ids:
+          - website_projects
+    difficulty: ambiguous
+    notes: The desired response distinguishes two valid meanings instead of choosing one.
+
+  - question_id: ambiguous_model_001
+    question: >
+      Does “model evaluation” in the corpus refer to predictive-model quality
+      or to testing a scientific hypothesis?
+    answerable: true
+    answer_mode: passage
+    category: ambiguous
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_005
+      - website_projects_chunk_008
+    expected_claims:
+      - claim: >
+          The variable-star work includes feature design, classifier
+          development, validation, and model evaluation for irregular time
+          series.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          The galaxy-spin work evaluates a correlation hypothesis with a null
+          model, significance estimation, and uncertainty quantification.
+        source_document_ids:
+          - website_projects
+    difficulty: ambiguous
+    notes: The desired response distinguishes predictive evaluation from hypothesis testing.
+
+  # Approach 5: quantitative questions grounded in local, inspectable passages.
+  - question_id: quantitative_vvv_catalogue_001
+    question: >
+      How many galaxy candidates were in the Southern Galactic disc catalogue,
+      and how many new galaxies did the Northern catalogue identify?
+    answerable: true
+    answer_mode: passage
+    category: quantitative
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_004
+      - website_projects_chunk_006
+    expected_claims:
+      - claim: >
+          The Southern Galactic disc catalogue contained 167,559 galaxy
+          candidates.
+        source_document_ids:
+          - website_projects
+      - claim: >
+          The Northern Galactic disc catalogue identified 1,003 new galaxies,
+          of which only two were previously known.
+        source_document_ids:
+          - website_projects
+    difficulty: quantitative
+    notes: Reverse-authored quantity extraction across adjacent catalogue passages.
+
+  - question_id: quantitative_toros_validation_001
+    question: >
+      What validation-set counts are documented for the TOROS transient
+      detection workflow?
+    answerable: true
+    answer_mode: passage
+    category: quantitative
+    expected_document_ids:
+      - website_projects
+    relevant_chunk_ids:
+      - website_projects_chunk_002
+    expected_claims:
+      - claim: >
+          The TOROS validation workflow used 2,414 bogus artifacts and 2,439
+          injected transients.
+        source_document_ids:
+          - website_projects
+    difficulty: quantitative
+    notes: Reverse-authored exact-count extraction; do not substitute unrelated TOROS counts.
+
+  # Approach 6: false premises that should result in a scoped abstention.
+  - question_id: false_premise_phd_computer_science_001
+    question: What was the title of Marcelo's PhD in Computer Science?
+    answerable: false
+    answer_mode: unanswerable
+    category: false_premise
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: The indexed education material documents a PhD in Astronomy, not Computer Science.
+
+  - question_id: false_premise_aws_certification_001
+    question: Which AWS professional certification did Marcelo obtain in 2021?
+    answerable: false
+    answer_mode: unanswerable
+    category: false_premise
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: The corpus documents attendance at AWSome Day, not an AWS professional certification.
+
+  - question_id: false_premise_kubernetes_cluster_001
+    question: Which Kubernetes cluster did Marcelo deploy for the TOROS project?
+    answerable: false
+    answer_mode: unanswerable
+    category: false_premise
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: The indexed TOROS evidence does not support a Kubernetes deployment claim.
+
+  - question_id: false_premise_arcovid_clinical_trial_001
+    question: What clinical trial did Arcovid19 run to validate its forecasts?
+    answerable: false
+    answer_mode: unanswerable
+    category: false_premise
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: The corpus describes open-data analytics and decision support, not a clinical trial.

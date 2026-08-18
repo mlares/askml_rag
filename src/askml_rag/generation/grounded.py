@@ -6,7 +6,7 @@ from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
-from askml_rag.models import Chunk, Visibility
+from askml_rag.models import Chunk, Language, Visibility
 
 
 ABSTENTION_MESSAGE = (
@@ -148,7 +148,12 @@ def build_context(chunks: Sequence[Chunk]) -> list[ContextChunk]:
     return context
 
 
-def build_prompt(question: str, context: Sequence[ContextChunk]) -> str:
+def build_prompt(
+    question: str,
+    context: Sequence[ContextChunk],
+    *,
+    answer_language: Language | None = None,
+) -> str:
     """Build a versioned prompt that confines the answer to retrieved evidence."""
     evidence = "\n\n".join(
         "<source "
@@ -157,6 +162,12 @@ def build_prompt(question: str, context: Sequence[ContextChunk]) -> str:
         f'title="{chunk.title}">\n{chunk.text}\n</source>'
         for chunk in context
     )
+    language_instruction = ""
+    if answer_language == Language.spanish:
+        language_instruction = "Write the answer, claims, and limitations in Spanish."
+    elif answer_language == Language.english:
+        language_instruction = "Write the answer, claims, and limitations in English."
+
     return f"""You are a grounded assistant over a bounded public corpus.
 
 Answer the question using only the source blocks below. Do not use outside
@@ -165,6 +176,7 @@ For every substantive claim, provide one or more citation_ids that name source
 chunk IDs. Every citation must include a short verbatim quote from that exact
 chunk. Never cite a chunk that was not supplied. List each chunk ID only once
 in citations; multiple claims may reuse that citation ID.
+{language_instruction}
 
 Return only a response matching this schema:
 {{
@@ -265,14 +277,20 @@ class GroundedGenerator:
     def __init__(self, llm: LanguageModel) -> None:
         self.llm = llm
 
-    def answer(self, question: str, retrieved_chunks: Sequence[Chunk]) -> GroundedAnswer:
+    def answer(
+        self,
+        question: str,
+        retrieved_chunks: Sequence[Chunk],
+        *,
+        answer_language: Language | None = None,
+    ) -> GroundedAnswer:
         context = build_context(retrieved_chunks)
         if not context:
             return self._abstain("No public evidence was retrieved for this question.")
 
         request = GenerationRequest(
             question=question,
-            prompt=build_prompt(question, context),
+            prompt=build_prompt(question, context, answer_language=answer_language),
             prompt_version=PROMPT_VERSION,
             context=context,
         )

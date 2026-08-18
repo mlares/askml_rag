@@ -4,6 +4,7 @@ document_type: project
 authors:
   - Marcelo Lares
 source_path: sources/public/03_proyectos_y_financiamiento.md
+language: es
 visibility: public
 topics:
   - formation

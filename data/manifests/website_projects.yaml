@@ -5,6 +5,7 @@ authors:
   - Marcelo Lares
 source_url: https://www.mlares.space/projects/
 source_path: data/raw/website_projects.md
+language: en
 visibility: public
 topics:
   - applied-ai

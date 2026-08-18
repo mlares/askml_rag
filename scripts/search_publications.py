@@ -2,36 +2,39 @@ import argparse
 from pathlib import Path
 
 from askml_rag.ingestion.publications import load_publication_catalog
-from askml_rag.models import Chunk
-from askml_rag.retrieval.bm25 import BM25Retriever
+from askml_rag.retrieval.publication_catalog import PublicationCatalogRetriever
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = PROJECT_ROOT / "data" / "processed" / "publications.jsonl"
-SUMMARY_CHUNKS_PATH = (
-    PROJECT_ROOT / "data" / "processed" / "publication_summary_chunks.jsonl"
-)
-
-
-def load_summary_chunks(path: Path) -> list[Chunk]:
-    with path.open(encoding="utf-8") as file:
-        return [Chunk.model_validate_json(line) for line in file if line.strip()]
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Search publication titles, authors, keywords, and abstracts."
     )
-    parser.add_argument("query", help="Natural-language publication query.")
+    parser.add_argument("query", nargs="?", help="Natural-language publication query.")
     parser.add_argument("--limit", type=int, default=5)
+    parser.add_argument(
+        "--author",
+        action="append",
+        default=[],
+        help="Require this author; repeat to require coauthors."
+    )
     arguments = parser.parse_args()
+    if not arguments.query and not arguments.author:
+        parser.error("provide a query or at least one --author")
 
     publications = load_publication_catalog(CATALOG_PATH)
     publications_by_id = {
         publication.document_id: publication for publication in publications
     }
-    retriever = BM25Retriever(load_summary_chunks(SUMMARY_CHUNKS_PATH))
-    results = retriever.search(arguments.query, limit=arguments.limit)
+    retriever = PublicationCatalogRetriever(publications)
+    results = (
+        retriever.chunks_by_authors(arguments.author, limit=arguments.limit)
+        if arguments.author
+        else retriever.search(arguments.query, limit=arguments.limit)
+    )
 
     if not results:
         print("No matching publications found.")

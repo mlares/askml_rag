@@ -34,31 +34,56 @@ def sha256_file(path: Path) -> str:
 
 
 def main() -> None:
-    full_text_chunks = load_chunk_index(FULL_TEXT_CHUNKS_PATH)
-    summary_chunks = load_chunk_index(SUMMARY_CHUNKS_PATH)
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Generate a compact identity index for one retrieval corpus."
+    )
+    parser.add_argument(
+        "--full-text-chunks",
+        type=Path,
+        default=Path("data/processed/chunks/chunks.jsonl"),
+    )
+    parser.add_argument(
+        "--summary-chunks",
+        type=Path,
+        default=Path("data/processed/publication_summary_chunks.jsonl"),
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("data/evaluation/corpus_index.json"),
+    )
+    arguments = parser.parse_args()
+    full_text_path = PROJECT_ROOT / arguments.full_text_chunks
+    summary_path = PROJECT_ROOT / arguments.summary_chunks
+    output_path = PROJECT_ROOT / arguments.output
+
+    full_text_chunks = load_chunk_index(full_text_path)
+    summary_chunks = load_chunk_index(summary_path)
     document_ids = sorted(
         set(full_text_chunks.values()) | set(summary_chunks.values())
     )
     payload = {
         "schema_version": "1",
         "sources": {
-            "full_text_chunks_sha256": sha256_file(FULL_TEXT_CHUNKS_PATH),
-            "summary_chunks_sha256": sha256_file(SUMMARY_CHUNKS_PATH),
+            "full_text_chunks_sha256": sha256_file(full_text_path),
+            "summary_chunks_sha256": sha256_file(summary_path),
         },
         "document_ids": document_ids,
         "full_text_chunks": full_text_chunks,
         "publication_summary_chunks": summary_chunks,
     }
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
         f"{json.dumps(payload, indent=2, ensure_ascii=False)}\n",
         encoding="utf-8",
     )
     print(f"Documents: {len(document_ids)}")
     print(f"Full-text chunks: {len(full_text_chunks)}")
     print(f"Publication summary chunks: {len(summary_chunks)}")
-    print(f"Output: {OUTPUT_PATH.relative_to(PROJECT_ROOT)}")
+    print(f"Output: {output_path.relative_to(PROJECT_ROOT)}")
 
 
 if __name__ == "__main__":

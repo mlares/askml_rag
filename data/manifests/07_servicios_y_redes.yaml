@@ -4,6 +4,7 @@ document_type: project
 authors:
   - Marcelo Lares
 source_path: sources/public/07_servicios_y_redes.md
+language: es
 visibility: public
 topics:
   - outreach

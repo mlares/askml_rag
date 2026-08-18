@@ -209,6 +209,8 @@ For each change:
 The complete ordered workflow, evaluation interpretation, and roadmap are in
 [docs/development.md](docs/development.md). The product boundary is defined in
 [docs/project_scope.md](docs/project_scope.md).
+For the short, exact corpus-to-metrics command sequence and its current gaps,
+see [docs/reproduce_retrieval.md](docs/reproduce_retrieval.md).
 
 The grounded-generation contract and its validation behavior are described in
 [docs/generation.md](docs/generation.md). The local OpenAI setup, request
@@ -219,4 +221,6 @@ interface and its architecture are described in [docs/web_ui.md](docs/web_ui.md)
 Operational safeguards and their deployment limits are described in
 [docs/operations.md](docs/operations.md). The OpenAI model-usage and
 cost-estimation probe is documented in
-[docs/openai_integration.md](docs/openai_integration.md).
+[docs/openai_integration.md](docs/openai_integration.md). The bounded Batch
+translation workflow for the bilingual curated dataset is in
+[docs/bilingual_dataset.md](docs/bilingual_dataset.md).

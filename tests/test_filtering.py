@@ -3,6 +3,7 @@ import pytest
 from askml_rag.models import (
     Chunk,
     DocumentType,
+    Language,
     RetrievalFilters,
     Visibility,
 )
@@ -15,6 +16,7 @@ def make_chunk(
     topics: list[str] | None = None,
     year: int | None = 2024,
     visibility: Visibility = Visibility.public,
+    language: Language | None = None,
 ) -> Chunk:
     return Chunk(
         chunk_id="example_chunk",
@@ -25,6 +27,7 @@ def make_chunk(
         document_type=document_type,
         year=year,
         visibility=visibility,
+        language=language,
         source_url="https://www.mlares.space/",
         topics=topics or [],
         text="Example text.",
@@ -68,6 +71,20 @@ def test_rejects_chunk_without_a_requested_topic() -> None:
     filters = RetrievalFilters(topics=["machine-learning"])
 
     assert not matches_filters(chunk, filters)
+
+
+def test_filters_chunks_by_language_but_can_retain_unknown_language() -> None:
+    spanish_chunk = make_chunk(language=Language.spanish)
+    unknown_language_chunk = make_chunk(language=None)
+    spanish_only = RetrievalFilters(languages=[Language.spanish])
+    spanish_with_papers = RetrievalFilters(
+        languages=[Language.spanish],
+        include_unknown_language=True,
+    )
+
+    assert matches_filters(spanish_chunk, spanish_only)
+    assert not matches_filters(unknown_language_chunk, spanish_only)
+    assert matches_filters(unknown_language_chunk, spanish_with_papers)
 
 
 def test_rejects_chunk_without_year_when_a_year_filter_is_requested() -> None:

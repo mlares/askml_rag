@@ -5,6 +5,7 @@ authors:
   - Marcelo Lares
 source_url: 
 source_path: data/raw/skills.md
+language: en
 visibility: public
 topics:
   - work-culture

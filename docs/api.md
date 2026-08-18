@@ -13,9 +13,9 @@ one question.
 
 ```text
 browser or client
-  -> POST /ask with {"question": "..."}
+  -> POST /ask with {"question": "...", "language": "es"}
   -> FastAPI validates the input
-  -> BM25 retrieves the selected top 7 public full-text chunks
+  -> BM25 retrieves the selected top 7 public full-text chunks in that language
   -> grounded generator calls OpenAI and validates the output
   -> JSON response with answer, citations, and retrieval metadata
 ```
@@ -28,13 +28,14 @@ silently change the model or retrieve a larger context through the request.
 
 - `src/askml_rag/api/app.py` defines the HTTP contracts and application
   factory.
-- `AskRequest` is the input schema. It accepts exactly one non-blank question,
-  up to 1,000 characters.
+- `AskRequest` accepts one non-blank question, up to 1,000 characters, and a
+  `language` of `es` or `en` (Spanish is the default). The language selects
+  the bilingual retrieval filter and the requested answer language.
 - `AskService` is the application layer. It holds one BM25 index and one
   generator in memory, so they are created once when the server starts rather
   than once per request.
 - `AskResponse` extends the existing `GroundedAnswer` with the retriever name,
-  retrieval limit, and retrieved chunk IDs.
+  retrieval limit, retrieved chunk IDs, and the resolved `query_language`.
 - `scripts/serve_api.py` is the local server entry point.
 - `tests/test_api.py` makes real in-process HTTP requests with FastAPI's test
   client, while injecting a fake LLM. The test has no OpenAI cost or network
@@ -89,7 +90,7 @@ Open a second terminal and run:
 ```bash
 curl -X POST http://127.0.0.1:8000/ask \
   -H 'Content-Type: application/json' \
-  -d '{"question":"What experience does Marcelo have with recommendation systems?"}'
+  -d '{"question":"¿Qué experiencia tiene Marcelo con sistemas de recomendación?","language":"es"}'
 ```
 
 The response has HTTP status `200` and looks conceptually like this:
@@ -102,6 +103,7 @@ The response has HTTP status `200` and looks conceptually like this:
   "citations": [{"chunk_id": "skills_chunk_001", "quote": "..."}],
   "retriever": "bm25",
   "retrieval_limit": 7,
+  "query_language": "es",
   "retrieved_chunk_ids": ["..."]
 }
 ```

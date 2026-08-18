@@ -61,6 +61,8 @@ def chunk_document(
             year=document.year,
             visibility=document.visibility,
             source_url=document.source_url,
+            language=document.language,
+            translation_of=document.translation_of,
             topics=document.topics,
             text=text,
         )

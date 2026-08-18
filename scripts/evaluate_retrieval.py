@@ -78,6 +78,24 @@ def main() -> None:
     parser.add_argument("--candidate-limit", type=int, default=50)
     parser.add_argument("--embedding-model", default=DEFAULT_MODEL)
     parser.add_argument(
+        "--questions",
+        type=Path,
+        default=Path("data/evaluation/questions.yaml"),
+        help="Evaluation-question YAML relative to the project root.",
+    )
+    parser.add_argument(
+        "--full-text-chunks",
+        type=Path,
+        default=Path("data/processed/chunks/chunks.jsonl"),
+        help="Full-text chunk JSONL relative to the project root.",
+    )
+    parser.add_argument(
+        "--summary-chunks",
+        type=Path,
+        default=Path("data/processed/publication_summary_chunks.jsonl"),
+        help="Publication summary JSONL relative to the project root.",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         help="Output JSON path; defaults to reports/retrieval/<method>_<corpus>.json.",
@@ -105,9 +123,9 @@ def main() -> None:
     if not output_path.is_absolute():
         output_path = PROJECT_ROOT / output_path
 
-    questions = load_questions(QUESTIONS_PATH)
-    full_text_chunks = load_chunks(FULL_TEXT_CHUNKS_PATH)
-    summary_chunks = load_chunks(SUMMARY_CHUNKS_PATH)
+    questions = load_questions(PROJECT_ROOT / arguments.questions)
+    full_text_chunks = load_chunks(PROJECT_ROOT / arguments.full_text_chunks)
+    summary_chunks = load_chunks(PROJECT_ROOT / arguments.summary_chunks)
     report = run_evaluation(
         questions,
         full_text_chunks,

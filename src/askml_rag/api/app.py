@@ -19,6 +19,7 @@ from askml_rag.config import load_dotenv
 from askml_rag.evaluation.runner import load_chunks
 from askml_rag.generation.grounded import GroundedAnswer, GroundedGenerator
 from askml_rag.generation.openai_provider import OpenAIResponsesLLM
+from askml_rag.models import Language, RetrievalFilters
 from askml_rag.retrieval.bm25 import BM25Retriever
 
 
@@ -76,6 +77,7 @@ class AskRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     question: str = Field(min_length=1, max_length=1_000)
+    language: Language = Language.spanish
 
     @field_validator("question")
     @classmethod
@@ -92,6 +94,7 @@ class AskResponse(GroundedAnswer):
     retriever: str = "bm25"
     retrieval_limit: int = RETRIEVAL_LIMIT
     retrieved_chunk_ids: list[str] = Field(default_factory=list)
+    query_language: Language
 
 
 class AskService:
@@ -110,13 +113,25 @@ class AskService:
         self.generator = generator
         self.retrieval_limit = retrieval_limit
 
-    def ask(self, question: str) -> AskResponse:
-        retrieved_chunks = self.retriever.search(question, limit=self.retrieval_limit)
-        answer = self.generator.answer(question, retrieved_chunks)
+    def ask(self, question: str, language: Language) -> AskResponse:
+        retrieved_chunks = self.retriever.search(
+            question,
+            limit=self.retrieval_limit,
+            filters=RetrievalFilters(
+                languages=[language],
+                include_unknown_language=True,
+            ),
+        )
+        answer = self.generator.answer(
+            question,
+            retrieved_chunks,
+            answer_language=language,
+        )
         return AskResponse(
             **answer.model_dump(),
             retrieval_limit=self.retrieval_limit,
             retrieved_chunk_ids=[chunk.chunk_id for chunk in retrieved_chunks],
+            query_language=language,
         )
 
 
@@ -193,7 +208,7 @@ def create_app(
     async def ask(payload: AskRequest, http_request: Request) -> AskResponse:
         try:
             return await asyncio.wait_for(
-                asyncio.to_thread(resolved_service.ask, payload.question),
+                asyncio.to_thread(resolved_service.ask, payload.question, payload.language),
                 timeout=resolved_settings.request_timeout_seconds,
             )
         except TimeoutError:

@@ -7,8 +7,10 @@ from qdrant_client.http.models import (
     Distance,
     FieldCondition,
     Filter,
+    IsNullCondition,
     MatchAny,
     MatchValue,
+    PayloadField,
     PointStruct,
     Range,
     VectorParams,
@@ -34,6 +36,7 @@ def build_qdrant_filter(filters: RetrievalFilters) -> Filter:
             match=MatchValue(value=Visibility.public.value),
         )
     ]
+    language_conditions = []
 
     if filters.document_ids:
         conditions.append(
@@ -55,6 +58,18 @@ def build_qdrant_filter(filters: RetrievalFilters) -> Filter:
             )
         )
 
+    if filters.languages:
+        language_conditions = [
+            FieldCondition(
+                key="language",
+                match=MatchAny(any=[language.value for language in filters.languages]),
+            )
+        ]
+        if filters.include_unknown_language:
+            language_conditions.append(
+                IsNullCondition(is_null=PayloadField(key="language"))
+            )
+
     if filters.topics:
         conditions.append(
             FieldCondition(
@@ -71,7 +86,7 @@ def build_qdrant_filter(filters: RetrievalFilters) -> Filter:
             )
         )
 
-    return Filter(must=conditions)
+    return Filter(must=conditions, should=language_conditions or None)
 
 
 class QdrantSemanticRetriever:

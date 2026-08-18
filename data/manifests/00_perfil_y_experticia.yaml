@@ -4,6 +4,7 @@ document_type: project
 authors:
   - Marcelo Lares
 source_path: sources/public/00_perfil_y_experticia.md
+language: es
 visibility: public
 topics:
   - research-funding

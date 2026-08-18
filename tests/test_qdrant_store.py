@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from qdrant_client import QdrantClient
 
-from askml_rag.models import Chunk, DocumentType, RetrievalFilters
+from askml_rag.models import Chunk, DocumentType, Language, RetrievalFilters
 from askml_rag.retrieval.qdrant_store import QdrantSemanticRetriever
 
 
@@ -155,3 +155,28 @@ def test_qdrant_retriever_filters_by_document_id() -> None:
     )
 
     assert [chunk.document_id for chunk in results] == ["teaching_source"]
+
+
+def test_qdrant_retriever_filters_by_language() -> None:
+    english_chunk = Chunk(
+        **make_chunk(
+            "ranking_chunk",
+            "Built a recommendation ranking model.",
+        ).model_dump(exclude={"language"}),
+        language=Language.english,
+    )
+    retriever = QdrantSemanticRetriever(
+        QdrantClient(":memory:"),
+        "test_chunks",
+        FakeEmbedder(),
+        model_name="fake-model",
+    )
+    retriever.index([english_chunk])
+
+    results = retriever.search(
+        "recommendation query",
+        limit=3,
+        filters=RetrievalFilters(languages=[Language.spanish]),
+    )
+
+    assert results == []

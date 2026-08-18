@@ -5,6 +5,7 @@ authors:
   - Marcelo Lares
 source_url: https://www.mlares.space/teaching/
 source_path: data/raw/website_teaching.md
+language: en
 visibility: public
 topics:
   - teaching

@@ -4,6 +4,7 @@ document_type: project
 authors:
   - Marcelo Lares
 source_path: sources/public/02_cargos_y_rrhh.md
+language: es
 visibility: public
 topics:
   - formation

@@ -23,7 +23,7 @@ browser
   -> GET /                         FastAPI returns index.html
   -> GET /static/styles.css        browser loads presentation rules
   -> GET /static/app.js            browser loads interaction code
-  -> POST /ask { question }        same FastAPI process runs the RAG pipeline
+  -> POST /ask { question, language } same FastAPI process runs the RAG pipeline
   <- GroundedAnswer JSON           browser renders answer or abstention
 ```
 
@@ -61,12 +61,18 @@ This is a conscious scope decision, not a claim that frameworks are bad. Move
 to a component framework only when repeated interactive components, complex
 client state, or a larger product makes that complexity worthwhile.
 
-### Server-owned RAG configuration
+### Server-owned RAG configuration with an explicit language choice
 
-The UI sends only the question. It cannot choose retriever, `k`, model, source
-paths, or prompt version. Those choices remain inside `AskService`, where they
-are evaluated and controlled. This avoids a user-visible interface accidentally
-turning into an unevaluated experiment-control panel.
+The UI sends the question and the visitor's `es` or `en` language selection. It
+cannot choose retriever, `k`, model, source paths, or prompt version. The
+selection changes all fixed visitor-facing text and becomes a server-side
+retrieval filter: matching-language chunks are searched, while chunks without a
+language label (such as existing papers) remain eligible. `AskService` also
+instructs the generator to answer in the selected language.
+
+Making the language explicit is more reliable than guessing from short or
+mixed-language questions. It also keeps retriever and answer behavior
+inspectable in the API response through `query_language`.
 
 ### Explicit answer states
 

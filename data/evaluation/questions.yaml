@@ -1237,3 +1237,200 @@ questions:
     expected_claims: []
     difficulty: unanswerable
     notes: The corpus describes open-data analytics and decision support, not a clinical trial.
+
+  # IThreex professional-experience sources, with matched English and Spanish questions.
+  - question_id: ithreex_kolektor_delay_001
+    question: What did Marcelo work on in Kolektor MVP I?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_kolektor_mvp1]
+    relevant_chunk_ids: [ithreex_kolektor_mvp1_chunk_000]
+    expected_claims:
+      - claim: Marcelo contributed to payment-delay prediction, taxpayer-segmentation feasibility, validation, and technical reporting for Kolektor MVP I.
+        source_document_ids: [ithreex_kolektor_mvp1]
+    difficulty: direct
+
+  - question_id: ithreex_kolektor_forecast_001
+    question: What forecasting work did Marcelo do for Kolektor MVP II?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_kolektor_mvp2]
+    relevant_chunk_ids: [ithreex_kolektor_mvp2_chunk_000]
+    expected_claims:
+      - claim: Marcelo contributed to behavioral metrics, payment and revenue modelling, validation, and production-readiness analysis for monthly collection forecasting.
+        source_document_ids: [ithreex_kolektor_mvp2]
+    difficulty: direct
+
+  - question_id: ithreex_pueblo_nativo_001
+    question: What customer analytics methods did Marcelo implement for Pueblo Nativo?
+    answerable: true
+    category: multi_document
+    expected_document_ids: [ithreex_pueblo_nativo]
+    relevant_chunk_ids: [ithreex_pueblo_nativo_chunk_000]
+    expected_claims:
+      - claim: Marcelo implemented RFM segmentation, market-basket analysis by segment, and sentiment analysis of satisfaction-survey comments for Pueblo Nativo.
+        source_document_ids: [ithreex_pueblo_nativo]
+    difficulty: direct
+
+  - question_id: ithreex_inverfin_001
+    question: What was Marcelo's contribution to the Inverfin branch analytics work?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_inverfin]
+    relevant_chunk_ids: [ithreex_inverfin_chunk_000]
+    expected_claims:
+      - claim: Marcelo contributed to branch-data enrichment, reporting, market-basket work, and early RFM and churn-related analysis.
+        source_document_ids: [ithreex_inverfin]
+    difficulty: direct
+
+  - question_id: ithreex_procordoba_001
+    question: How did Marcelo support export-opportunity analytics for ProCórdoba?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_procordoba]
+    relevant_chunk_ids: [ithreex_procordoba_chunk_000]
+    expected_claims:
+      - claim: Marcelo contributed to a trade-data pipeline using PCA and k-means country clustering by HS commodity code.
+        source_document_ids: [ithreex_procordoba]
+    difficulty: direct
+
+  - question_id: ithreex_ss_servicios_001
+    question: What data-engineering work did Marcelo do for SS Servicios?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_ss_servicios]
+    relevant_chunk_ids: [ithreex_ss_servicios_chunk_000]
+    expected_claims:
+      - claim: Marcelo contributed to integrating customer, collections, support-ticket, and connection data into a customer-level analytical dataset.
+        source_document_ids: [ithreex_ss_servicios]
+    difficulty: direct
+
+  - question_id: ithreex_animalia_001
+    question: What was Marcelo's role in the AnimalIA cattle-weight project?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_animalia]
+    relevant_chunk_ids: [ithreex_animalia_chunk_000]
+    expected_claims:
+      - claim: Marcelo led scientific decisions and presented results to the client, but was not a documented direct code author.
+        source_document_ids: [ithreex_animalia]
+    difficulty: direct
+
+  - question_id: ithreex_molibdeno_001
+    question: What did Marcelo contribute to the Molibdeno AI product?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_molibdeno]
+    relevant_chunk_ids: [ithreex_molibdeno_chunk_000]
+    expected_claims:
+      - claim: Marcelo contributed to architectural proof-of-concept work, model development, time-series forecasting, clustering experiments, and platform tools for Molibdeno.
+        source_document_ids: [ithreex_molibdeno]
+    difficulty: direct
+
+  - question_id: ithreex_animalia_deployment_001
+    question: Was the AnimalIA cattle-weight system deployed in production?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: The available source explicitly does not establish deployment or a final client outcome.
+
+  - question_id: ithreex_kolektor_delay_es_001
+    question: ¿En qué trabajó Marcelo en el MVP I de Kolektor?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_kolektor_mvp1_es]
+    relevant_chunk_ids: [ithreex_kolektor_mvp1_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo trabajó en predicción de demoras de pago, viabilidad de segmentación de contribuyentes, validación e informes técnicos para el MVP I de Kolektor.
+        source_document_ids: [ithreex_kolektor_mvp1_es]
+    difficulty: direct
+
+  - question_id: ithreex_kolektor_forecast_es_001
+    question: ¿Qué trabajo de previsión realizó Marcelo para el MVP II de Kolektor?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_kolektor_mvp2_es]
+    relevant_chunk_ids: [ithreex_kolektor_mvp2_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo contribuyó a métricas de comportamiento, modelado de pagos e ingresos, validación y análisis de preparación para producción en la previsión mensual de recaudación.
+        source_document_ids: [ithreex_kolektor_mvp2_es]
+    difficulty: direct
+
+  - question_id: ithreex_pueblo_nativo_es_001
+    question: ¿Qué métodos de analítica de clientes implementó Marcelo para Pueblo Nativo?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_pueblo_nativo_es]
+    relevant_chunk_ids: [ithreex_pueblo_nativo_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo implementó segmentación RFM, análisis de cesta de mercado por segmento y análisis de sentimiento de comentarios de encuestas de satisfacción.
+        source_document_ids: [ithreex_pueblo_nativo_es]
+    difficulty: direct
+
+  - question_id: ithreex_inverfin_es_001
+    question: ¿Cuál fue la contribución de Marcelo al trabajo de analítica de sucursales de Inverfin?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_inverfin_es]
+    relevant_chunk_ids: [ithreex_inverfin_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo contribuyó al enriquecimiento de datos de sucursales, informes, análisis de cesta de mercado y análisis iniciales de RFM y churn.
+        source_document_ids: [ithreex_inverfin_es]
+    difficulty: direct
+
+  - question_id: ithreex_procordoba_es_001
+    question: ¿Cómo apoyó Marcelo la analítica de oportunidades de exportación para ProCórdoba?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_procordoba_es]
+    relevant_chunk_ids: [ithreex_procordoba_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo contribuyó a un pipeline de datos comerciales con PCA y clustering k-means de países por código HS de producto.
+        source_document_ids: [ithreex_procordoba_es]
+    difficulty: direct
+
+  - question_id: ithreex_ss_servicios_es_001
+    question: ¿Qué trabajo de ingeniería de datos realizó Marcelo para SS Servicios?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_ss_servicios_es]
+    relevant_chunk_ids: [ithreex_ss_servicios_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo contribuyó a integrar datos de clientes, cobranzas, tickets de soporte y conexiones en un conjunto analítico a nivel cliente.
+        source_document_ids: [ithreex_ss_servicios_es]
+    difficulty: direct
+
+  - question_id: ithreex_animalia_es_001
+    question: ¿Cuál fue el rol de Marcelo en el proyecto AnimalIA de estimación de peso bovino?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_animalia_es]
+    relevant_chunk_ids: [ithreex_animalia_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo lideró decisiones científicas y presentó resultados al cliente, pero no fue un autor directo de código documentado.
+        source_document_ids: [ithreex_animalia_es]
+    difficulty: direct
+
+  - question_id: ithreex_molibdeno_es_001
+    question: ¿A qué contribuyó Marcelo en el producto de IA Molibdeno?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [ithreex_molibdeno_es]
+    relevant_chunk_ids: [ithreex_molibdeno_es_chunk_000]
+    expected_claims:
+      - claim: Marcelo contribuyó a una prueba de concepto de arquitectura, desarrollo de modelos, previsión de series temporales, experimentos de clustering y herramientas de plataforma para Molibdeno.
+        source_document_ids: [ithreex_molibdeno_es]
+    difficulty: direct
+
+  - question_id: ithreex_animalia_deployment_es_001
+    question: ¿Se desplegó en producción el sistema de estimación de peso bovino de AnimalIA?
+    answerable: false
+    category: unanswerable
+    expected_document_ids: []
+    relevant_chunk_ids: []
+    expected_claims: []
+    difficulty: unanswerable
+    notes: La fuente disponible no establece despliegue ni un resultado final para el cliente.

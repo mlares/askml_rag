@@ -5,6 +5,7 @@ authors:
   - Marcelo Lares
 source_url: https://www.mlares.space/research/
 source_path: data/raw/website_research.md
+language: en
 visibility: public
 topics:
   - astronomy

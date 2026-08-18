@@ -9,15 +9,29 @@ from askml_rag.retrieval.chunking import chunk_document
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-def load_canonical_documents(directory: Path) -> list[CanonicalDocument]:
-    """Load all top-level canonical JSON documents from a directory."""
+def load_canonical_documents(
+    directory: Path,
+    *,
+    document_ids: set[str] | None = None,
+) -> list[CanonicalDocument]:
+    """Load selected top-level canonical JSON documents from a directory."""
     documents = []
 
     for path in sorted(directory.glob("*.json")):
         payload = json.loads(path.read_text(encoding="utf-8"))
         documents.append(CanonicalDocument.model_validate(payload))
 
-    return documents
+    if document_ids is None:
+        return documents
+
+    found_ids = {document.document_id for document in documents}
+    missing_ids = sorted(document_ids - found_ids)
+    if missing_ids:
+        raise ValueError(
+            "No canonical document found for: " + ", ".join(missing_ids)
+        )
+
+    return [document for document in documents if document.document_id in document_ids]
 
 
 def main() -> None:
@@ -36,13 +50,32 @@ def main() -> None:
         default=40,
         help="Number of words shared by adjacent chunks.",
     )
+    parser.add_argument(
+        "--document-id",
+        action="append",
+        default=[],
+        help="Chunk only this canonical document ID; repeat for multiple documents.",
+    )
+    parser.add_argument(
+        "--output-directory",
+        type=Path,
+        default=Path("data/processed/chunks"),
+        help="Output directory relative to the project root.",
+    )
     arguments = parser.parse_args()
 
     input_directory = PROJECT_ROOT / "data" / "processed"
-    output_directory = input_directory / "chunks"
+    output_directory = PROJECT_ROOT / arguments.output_directory
+    try:
+        output_directory.resolve().relative_to(PROJECT_ROOT.resolve())
+    except ValueError as error:
+        raise ValueError("The output directory must stay inside the project root.") from error
     output_directory.mkdir(parents=True, exist_ok=True)
 
-    documents = load_canonical_documents(input_directory)
+    documents = load_canonical_documents(
+        input_directory,
+        document_ids=set(arguments.document_id) or None,
+    )
 
     chunks = [
         chunk

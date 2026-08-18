@@ -16,6 +16,13 @@ class Visibility(StrEnum):
     excluded = "excluded"
 
 
+class Language(StrEnum):
+    """Languages deliberately supported by the curated bilingual corpus."""
+
+    english = "en"
+    spanish = "es"
+
+
 class AbstractSource(StrEnum):
     """Origin of publication abstract text."""
 
@@ -33,6 +40,11 @@ class SourceManifest(BaseModel):
     authors: list[str] = Field(default_factory=list)
     source_url: HttpUrl | None = None
     source_path: str
+    language: Language | None = None
+    translation_of: str | None = Field(
+        default=None,
+        pattern=r"^[a-z0-9]+(?:_[a-z0-9]+)*$",
+    )
     visibility: Visibility = Visibility.public
     topics: list[str] = Field(default_factory=list)
 
@@ -50,6 +62,11 @@ class CanonicalDocument(BaseModel):
     authors: list[str] = Field(default_factory=list)
     source_url: HttpUrl | None = None
     source_path: str
+    language: Language | None = None
+    translation_of: str | None = Field(
+        default=None,
+        pattern=r"^[a-z0-9]+(?:_[a-z0-9]+)*$",
+    )
     content_hash: str = Field(min_length=64, max_length=64)
     visibility: Visibility = Visibility.public
     topics: list[str] = Field(default_factory=list)
@@ -92,6 +109,8 @@ class Chunk(BaseModel):
     year: int | None = Field(default=None, ge=1900)
     visibility: Visibility = Visibility.public
     source_url: HttpUrl | None = None
+    language: Language | None = None
+    translation_of: str | None = None
     topics: list[str] = Field(default_factory=list)
     text: str = Field(min_length=1)
 
@@ -101,6 +120,8 @@ class RetrievalFilters(BaseModel):
 
     document_ids: list[str] = Field(default_factory=list)
     document_types: list[DocumentType] = Field(default_factory=list)
+    languages: list[Language] = Field(default_factory=list)
+    include_unknown_language: bool = False
     topics: list[str] = Field(default_factory=list)
     year_from: int | None = Field(default=None, ge=1900)
     year_to: int | None = Field(default=None, ge=1900)

@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from askml_rag.api.app import AskResponse, AskService, OperationalSettings, create_app
 from askml_rag.generation.grounded import GroundedGenerator, LLMGenerationResponse, StaticLLM
-from askml_rag.models import Chunk
+from askml_rag.models import Chunk, Language
 from askml_rag.retrieval.bm25 import BM25Retriever
 
 
@@ -17,6 +17,7 @@ def make_chunk() -> Chunk:
         title="Selected projects",
         document_type="website",
         source_url="https://www.mlares.space/projects/",
+        language=Language.spanish,
         text="Marcelo built reproducible data-processing pipelines with validation rules.",
     )
 
@@ -76,6 +77,7 @@ def test_post_ask_runs_bm25_and_returns_a_grounded_answer() -> None:
     assert payload["answerable"] is True
     assert payload["retriever"] == "bm25"
     assert payload["retrieval_limit"] == 7
+    assert payload["query_language"] == "es"
     assert payload["retrieved_chunk_ids"] == ["website_projects_chunk_001"]
     assert payload["citations"][0]["chunk_id"] == "website_projects_chunk_001"
 
@@ -86,9 +88,10 @@ def test_get_root_serves_the_web_interface() -> None:
     assert response.status_code == 200
     assert "AskML RAG" in response.text
     assert "/static/app.js" in response.text
-    assert "do not submit private, sensitive, or confidential information" in response.text
-    assert "About this assistant" in response.text
-    assert "Questions are not retained in application request logs" in response.text
+    assert "no envíes información privada, sensible o confidencial" in response.text
+    assert 'name="language"' in response.text
+    assert 'value="es" checked' in response.text
+    assert "Las preguntas no se conservan en los registros de solicitudes" in response.text
 
 
 def test_get_static_javascript_serves_the_api_client() -> None:
@@ -96,6 +99,8 @@ def test_get_static_javascript_serves_the_api_client() -> None:
 
     assert response.status_code == 200
     assert "fetch(\"/ask\"" in response.text
+    assert "language: selectedLanguage()" in response.text
+    assert "applyInterfaceLanguage" in response.text
 
 
 def test_post_ask_rejects_invalid_request_data() -> None:
@@ -115,6 +120,22 @@ def test_post_ask_rejects_unexpected_request_fields() -> None:
     )
 
     assert response.status_code == 422
+
+
+def test_post_ask_filters_to_the_requested_language() -> None:
+    client = make_client()
+
+    response = client.post(
+        "/ask",
+        json={
+            "question": "Which reproducible data-processing pipelines did Marcelo build?",
+            "language": "en",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["retrieved_chunk_ids"] == []
+    assert response.json()["query_language"] == "en"
 
 
 def test_post_ask_rate_limits_one_client() -> None:
@@ -155,9 +176,9 @@ def test_request_logging_omits_question_and_headers(caplog) -> None:
 
 def test_post_ask_times_out_before_a_slow_service_finishes() -> None:
     class SlowService:
-        def ask(self, question: str) -> AskResponse:
+        def ask(self, question: str, language: Language) -> AskResponse:
             time.sleep(0.05)
-            raise AssertionError(question)
+            raise AssertionError((question, language))
 
     client = TestClient(
         create_app(

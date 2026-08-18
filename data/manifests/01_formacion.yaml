@@ -4,6 +4,7 @@ document_type: project
 authors:
   - Marcelo Lares
 source_path: sources/public/01_formacion.md
+language: es
 visibility: public
 topics:
   - formation

@@ -149,6 +149,16 @@ class QuestionCategory(StrEnum):
     false_premise = "false_premise"
 
 
+class EvaluationTopic(StrEnum):
+    """Stable subject slices used to report retrieval quality."""
+
+    professional_profile = "professional_profile"
+    scientific_publications = "scientific_publications"
+    cross_source_reasoning = "cross_source_reasoning"
+    ithreex_projects = "ithreex_projects"
+    famaf_teaching = "famaf_teaching"
+
+
 class AnswerMode(StrEnum):
     """Evidence representation required to answer a benchmark question."""
 
@@ -172,6 +182,8 @@ class EvaluationQuestion(BaseModel):
         examples=["ml_experience_001"],
     )
     question: str = Field(min_length=1)
+    topic: EvaluationTopic
+    language: Language
     answerable: bool
     category: QuestionCategory
     answer_mode: AnswerMode | None = None

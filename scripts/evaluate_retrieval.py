@@ -4,6 +4,7 @@ from pathlib import Path
 
 from askml_rag.evaluation.runner import (
     CorpusMode,
+    EvaluationMetricsSlice,
     RetrievalEvaluationConfig,
     RetrievalMethod,
     load_chunks,
@@ -14,6 +15,7 @@ from askml_rag.evaluation.runner import (
 from askml_rag.models import Chunk
 from askml_rag.retrieval.bm25 import BM25Retriever
 from askml_rag.retrieval.hybrid import HybridRetriever, Retriever
+from askml_rag.retrieval.planned_bm25 import PlannedBM25Retriever
 from askml_rag.retrieval.semantic import SemanticRetriever
 
 
@@ -33,12 +35,35 @@ def format_metric(value: float | None) -> str:
     return "n/a" if value is None else f"{value:.3f}"
 
 
+def print_metric_slice(
+    label: str,
+    metrics: EvaluationMetricsSlice,
+    *,
+    k: int,
+) -> None:
+    """Print one overall or grouped aggregate using a consistent format."""
+    values = metrics.aggregate[str(k)]
+    print(
+        f"  {label}: questions={metrics.question_count}, "
+        f"answerable={metrics.answerable_question_count}, "
+        f"chunk recall={format_metric(values.mean_chunk_recall)}, "
+        f"MRR={format_metric(values.mean_reciprocal_rank)}, "
+        f"nDCG={format_metric(values.mean_ndcg)}, "
+        f"document recall={values.mean_document_recall:.3f}"
+    )
+
+
 def build_retriever_factory(
     config: RetrievalEvaluationConfig,
 ) -> Callable[[Sequence[Chunk]], Retriever]:
     """Create a corpus-specific retriever factory from CLI configuration."""
     if config.method == RetrievalMethod.bm25:
         return lambda chunks: BM25Retriever(chunks)
+    if config.method == RetrievalMethod.planned_bm25:
+        return lambda chunks: PlannedBM25Retriever(
+            chunks,
+            candidate_limit=config.candidate_limit,
+        )
 
     from sentence_transformers import SentenceTransformer
 
@@ -80,14 +105,22 @@ def main() -> None:
     parser.add_argument(
         "--questions",
         type=Path,
-        default=Path("data/evaluation/questions.yaml"),
-        help="Evaluation-question YAML relative to the project root.",
+        nargs="+",
+        default=[Path("data/evaluation/questions.yaml")],
+        help=(
+            "One or more evaluation-question YAML files relative to the "
+            "project root. Files are combined into one report."
+        ),
     )
     parser.add_argument(
         "--full-text-chunks",
         type=Path,
-        default=Path("data/processed/chunks/chunks.jsonl"),
-        help="Full-text chunk JSONL relative to the project root.",
+        nargs="+",
+        default=[Path("data/processed/chunks/chunks.jsonl")],
+        help=(
+            "One or more full-text chunk JSONL files relative to the project "
+            "root. Files are combined into one corpus."
+        ),
     )
     parser.add_argument(
         "--summary-chunks",
@@ -112,7 +145,7 @@ def main() -> None:
         candidate_limit=arguments.candidate_limit,
         embedding_model=(
             arguments.embedding_model
-            if method != RetrievalMethod.bm25
+            if method in {RetrievalMethod.semantic, RetrievalMethod.hybrid}
             else None
         ),
     )
@@ -123,8 +156,22 @@ def main() -> None:
     if not output_path.is_absolute():
         output_path = PROJECT_ROOT / output_path
 
-    questions = load_questions(PROJECT_ROOT / arguments.questions)
-    full_text_chunks = load_chunks(PROJECT_ROOT / arguments.full_text_chunks)
+    questions = [
+        question
+        for questions_path in arguments.questions
+        for question in load_questions(PROJECT_ROOT / questions_path)
+    ]
+    question_ids = [question.question_id for question in questions]
+    if len(question_ids) != len(set(question_ids)):
+        parser.error("Combined question files contain duplicate question IDs.")
+    full_text_chunks = [
+        chunk
+        for chunks_path in arguments.full_text_chunks
+        for chunk in load_chunks(PROJECT_ROOT / chunks_path)
+    ]
+    chunk_ids = [chunk.chunk_id for chunk in full_text_chunks]
+    if len(chunk_ids) != len(set(chunk_ids)):
+        parser.error("Combined full-text chunk files contain duplicate chunk IDs.")
     summary_chunks = load_chunks(PROJECT_ROOT / arguments.summary_chunks)
     report = run_evaluation(
         questions,
@@ -147,6 +194,13 @@ def main() -> None:
             f"nDCG={format_metric(metrics.mean_ndcg)}, "
             f"document recall={metrics.mean_document_recall:.3f}"
         )
+        print("By language:")
+        for language, metric_slice in report.aggregate_by_language.items():
+            print_metric_slice(language, metric_slice, k=k)
+        print("By topic and language:")
+        for topic, languages in report.aggregate_by_topic_and_language.items():
+            for language, metric_slice in languages.items():
+                print_metric_slice(f"{topic}/{language}", metric_slice, k=k)
     print(f"Median latency: {report.latency_median_ms:.2f} ms")
     print(f"P95 latency: {report.latency_p95_ms:.2f} ms")
     try:

@@ -1,6 +1,7 @@
 document_id: arxiv_1701_05566
 title: "Corral framework: Trustworthy and fully functional data intensive parallel astronomical pipelines"
 document_type: publication
+language: en
 year: 2017
 authors:
   - "J. B. Cabral"
@@ -23,4 +24,3 @@ topics:
   - "Computer Science - Software Engineering"
   - "Physics - Data Analysis"
   - "Statistics and Probability"
-

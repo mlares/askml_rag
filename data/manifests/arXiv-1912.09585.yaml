@@ -1,6 +1,7 @@
 document_id: arxiv_1912_09585
 title: "GriSPy: A Python package for fixed-radius nearest neighbors search"
 document_type: publication
+language: en
 year: 2021
 authors:
   - "M. Chalela"
@@ -21,4 +22,3 @@ topics:
   - "Astroinformatics"
   - "Python package"
   - "Astrophysics - Instrumentation and Methods for Astrophysics"
-

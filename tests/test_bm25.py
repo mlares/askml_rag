@@ -56,3 +56,17 @@ def test_bm25_returns_no_results_when_no_terms_match() -> None:
     results = retriever.search("underwater basket weaving", limit=3)
 
     assert results == []
+
+
+def test_bm25_can_index_titles_and_topics_for_planned_retrieval() -> None:
+    relevant = make_chunk(chunk_id="cloud_chunk", text="Compute Engine details.")
+    relevant.title = "Google Cloud Platform services"
+    decoys = [
+        make_chunk(chunk_id=f"decoy_{index}", text=f"Unrelated material {index}")
+        for index in range(4)
+    ]
+    retriever = BM25Retriever([relevant, *decoys], include_metadata=True)
+
+    results = retriever.search("Google Cloud Platform", limit=1)
+
+    assert [chunk.chunk_id for chunk in results] == ["cloud_chunk"]

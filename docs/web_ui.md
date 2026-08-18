@@ -66,8 +66,8 @@ client state, or a larger product makes that complexity worthwhile.
 The UI sends the question and the visitor's `es` or `en` language selection. It
 cannot choose retriever, `k`, model, source paths, or prompt version. The
 selection changes all fixed visitor-facing text and becomes a server-side
-retrieval filter: matching-language chunks are searched, while chunks without a
-language label (such as existing papers) remain eligible. `AskService` also
+retrieval filter: each source has an English and Spanish counterpart, and the
+matching language-specific lexical index is searched. `AskService` also
 instructs the generator to answer in the selected language.
 
 Making the language explicit is more reliable than guessing from short or

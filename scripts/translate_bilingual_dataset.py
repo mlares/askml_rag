@@ -52,6 +52,7 @@ SOURCES = (
     Source("cv_education", "sources/public/01_formacion.md", "es", "cv_education_en", "sources/public/01_formacion_en.md", "Education, studies and certifications", "data/manifests/01_formacion.yaml"),
     Source("cv_rrhh", "sources/public/02_cargos_y_rrhh.md", "es", "cv_rrhh_en", "sources/public/02_cargos_y_rrhh_en.md", "Academic positions, employment and mentoring", "data/manifests/02_cargos_y_rrhh.yaml"),
     Source("cv_projects", "sources/public/03_proyectos_y_financiamiento.md", "es", "cv_projects_en", "sources/public/03_proyectos_y_financiamiento_en.md", "Projects and research funding", "data/manifests/03_proyectos_y_financiamiento.yaml"),
+    Source("cv_extension", "sources/public/04_extension.md", "es", "cv_extension_en", "sources/public/04_extension_en.md", "Outreach and public communication", "data/manifests/04_extension.yaml"),
     Source("cv_outreach", "sources/public/05_evaluacion.md", "es", "cv_outreach_en", "sources/public/05_evaluacion_en.md", "Academic evaluation and outreach", "data/manifests/05_evaluacion.yaml"),
     Source("cv_papers", "sources/public/06_produccion_y_publicaciones.md", "es", "cv_papers_en", "sources/public/06_produccion_y_publicaciones_en.md", "Publication record", "data/manifests/06_produccion_y_publicaciones.yaml"),
     Source("cv_meetings", "sources/public/07_servicios_y_redes.md", "es", "cv_meetings_en", "sources/public/07_servicios_y_redes_en.md", "Services, professional networks and meetings", "data/manifests/07_servicios_y_redes.yaml"),
@@ -124,11 +125,16 @@ def request(custom_id: str, prompt: str, max_output_tokens: int) -> dict[str, An
     }
 
 
-def build_tasks() -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def build_tasks(
+    *,
+    only_missing: bool = False,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     requests: list[dict[str, Any]] = []
     tasks: list[dict[str, Any]] = []
     input_tokens = output_tokens = 0
     for source in SOURCES:
+        if only_missing and (PROJECT_ROOT / source.translated_path).is_file():
+            continue
         body = (PROJECT_ROOT / source.source_path).read_text(encoding="utf-8")
         prompt = source_prompt(source, body)
         maximum = estimate_tokens(body) + 1024
@@ -139,19 +145,21 @@ def build_tasks() -> tuple[list[dict[str, Any]], dict[str, Any]]:
         output_tokens += maximum
 
     questions_path = PROJECT_ROOT / "data/evaluation/questions.yaml"
-    questions = questions_path.read_text(encoding="utf-8")
-    prompt = questions_prompt(questions)
-    maximum = estimate_tokens(questions) + 1024
-    requests.append(request("evaluation_questions_es", prompt, maximum))
-    tasks.append({"custom_id": "evaluation_questions_es", "kind": "questions", "source_path": "data/evaluation/questions.yaml", "target_path": "data/evaluation/questions_es.draft.yaml", "source_sha256": hashlib.sha256(questions.encode()).hexdigest(), "max_output_tokens": maximum})
-    input_tokens += estimate_tokens(prompt)
-    output_tokens += maximum
+    target_questions_path = PROJECT_ROOT / "data/evaluation/questions_es.draft.yaml"
+    if not only_missing or not target_questions_path.is_file():
+        questions = questions_path.read_text(encoding="utf-8")
+        prompt = questions_prompt(questions)
+        maximum = estimate_tokens(questions) + 1024
+        requests.append(request("evaluation_questions_es", prompt, maximum))
+        tasks.append({"custom_id": "evaluation_questions_es", "kind": "questions", "source_path": "data/evaluation/questions.yaml", "target_path": "data/evaluation/questions_es.draft.yaml", "source_sha256": hashlib.sha256(questions.encode()).hexdigest(), "max_output_tokens": maximum})
+        input_tokens += estimate_tokens(prompt)
+        output_tokens += maximum
     cost = (input_tokens * INPUT_PRICE + output_tokens * OUTPUT_PRICE) / 1_000_000
     return requests, {"schema_version": "1", "model": MODEL, "request_count": len(requests), "estimated_input_tokens_upper_bound": input_tokens, "estimated_output_tokens_upper_bound": output_tokens, "estimated_cost_usd_upper_bound": cost, "tasks": tasks}
 
 
-def prepare() -> dict[str, Any]:
-    requests, manifest = build_tasks()
+def prepare(*, only_missing: bool = False) -> dict[str, Any]:
+    requests, manifest = build_tasks(only_missing=only_missing)
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     INPUT_PATH.write_text("".join(json.dumps(item, ensure_ascii=False) + "\n" for item in requests), encoding="utf-8")
     TASKS_PATH.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -290,11 +298,16 @@ def main() -> None:
     parser.add_argument("--env-file", default=".env")
     parser.add_argument("--api-key-env", default="OPENAI_TRANSLATE_API_KEY")
     parser.add_argument("--max-cost-usd", type=float, default=DEFAULT_MAX_COST)
+    parser.add_argument(
+        "--only-missing",
+        action="store_true",
+        help="Prepare only translations whose target file does not exist.",
+    )
     args = parser.parse_args()
     if args.max_cost_usd <= 0:
         raise SystemExit("--max-cost-usd must be positive.")
     if args.command == "prepare":
-        manifest = prepare()
+        manifest = prepare(only_missing=args.only_missing)
         print(f"Prepared {manifest['request_count']} requests.")
         print(f"Estimated upper-bound cost: US${manifest['estimated_cost_usd_upper_bound']:.4f}")
     elif args.command == "submit":

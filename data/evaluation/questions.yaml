@@ -1,6 +1,8 @@
 questions:
 
   - question_id: recommendation_experience_001
+    topic: professional_profile
+    language: en
     question: What experience does Marcelo have with recommendation systems?
     answerable: true
     category: direct_fact
@@ -29,6 +31,8 @@ questions:
       six countries; the indexed website supports three LATAM markets.
 
   - question_id: work_atmosphere_001
+    topic: professional_profile
+    language: en
     question: What does Marcelo expect from a work atmosphere?
     answerable: false
     category: unanswerable
@@ -41,6 +45,8 @@ questions:
       No reviewed, indexed public source currently supports it.
 
   - question_id: python_experience_001
+    topic: professional_profile
+    language: en
     question: What Python experience does Marcelo have?
     answerable: true
     category: direct_fact
@@ -72,6 +78,8 @@ questions:
       quantitative claim of more than ten years from questions_base.csv.
 
   - question_id: deep_learning_experience_001
+    topic: professional_profile
+    language: en
     question: What deep-learning experience does Marcelo have?
     answerable: true
     category: direct_fact
@@ -100,6 +108,8 @@ questions:
     notes: Drafted from questions_base.csv and expanded with cited public evidence.
 
   - question_id: kubernetes_experience_001
+    topic: professional_profile
+    language: en
     question: What experience does Marcelo have with Kubernetes?
     answerable: false
     category: unanswerable
@@ -112,6 +122,8 @@ questions:
       experience. The system should state that it lacks supporting evidence.
 
   - question_id: terraform_experience_001
+    topic: professional_profile
+    language: en
     question: What experience does Marcelo have with Terraform?
     answerable: false
     category: unanswerable
@@ -123,6 +135,8 @@ questions:
       experience. The system should state that it lacks supporting evidence.
 
   - question_id: gcp_services_001
+    topic: professional_profile
+    language: en
     question: Which GCP services are documented in Marcelo's indexed public corpus?
     answerable: true
     category: direct_fact
@@ -143,6 +157,8 @@ questions:
       evidence of the depth or duration of experience with each service.
 
   - question_id: unsupported_computing_cost_001
+    topic: professional_profile
+    language: en
     question: What was the exact computing cost of the TOROS pipeline?
     answerable: false
     category: unanswerable
@@ -152,6 +168,8 @@ questions:
     notes: No indexed public source should support this claim.
 
   - question_id: teaching_001
+    topic: professional_profile
+    language: en
     question: What teaching experience does Marcelo have in statistics?
     answerable: true
     category: direct_fact
@@ -172,6 +190,8 @@ questions:
     notes:
 
   - question_id: teaching_002
+    topic: professional_profile
+    language: en
     question: What teaching experience does Marcelo have in data science?
     answerable: true
     category: direct_fact
@@ -192,6 +212,8 @@ questions:
     notes:
 
   - question_id: teaching_003
+    topic: professional_profile
+    language: en
     question: What teaching experience does Marcelo have?
     answerable: true
     category: direct_fact
@@ -217,6 +239,8 @@ questions:
 
 
   - question_id: production_001
+    topic: professional_profile
+    language: en
     question: What software products has Marcelo produced?
     answerable: true
     category: direct_fact
@@ -243,6 +267,8 @@ questions:
     notes:
 
   - question_id: production_002
+    topic: professional_profile
+    language: en
     question: What papers has Marcelo published in statistical research?
     answerable: true
     category: direct_fact
@@ -262,6 +288,8 @@ questions:
     notes:
 
   - question_id: production_003
+    topic: professional_profile
+    language: en
     question: What is Marcelo Lares's Google Scholar profile?
     answerable: true
     category: direct_fact
@@ -279,6 +307,8 @@ questions:
     notes:
 
   - question_id: production_004
+    topic: professional_profile
+    language: en
     question: Has Marcelo taught data science?
     answerable: true
     category: direct_fact
@@ -299,6 +329,8 @@ questions:
     notes: Reviewed against the teaching and projects pages.
 
   - question_id: production_005
+    topic: professional_profile
+    language: en
     question: Has Marcelo taught statistics?
     answerable: true
     category: direct_fact
@@ -320,6 +352,8 @@ questions:
 
 
   - question_id: sports_experience_001
+    topic: professional_profile
+    language: en
     question: What evidence is there for sports performance?
     answerable: false
     category: unanswerable
@@ -332,6 +366,8 @@ questions:
       The system should state that it lacks supporting evidence.
 
   - question_id: politics_experience_001
+    topic: professional_profile
+    language: en
     question: What evidence is there for participation in politics?
     answerable: false
     category: unanswerable
@@ -344,6 +380,8 @@ questions:
       The system should state that it lacks supporting evidence.
 
   - question_id: work_001
+    topic: professional_profile
+    language: en
     question: Did Marcelo hold a postdoctoral fellowship at CONICET?
     answerable: true
     category: direct_fact
@@ -361,6 +399,8 @@ questions:
     notes: Reviewed against website_research
 
   - question_id: work_002
+    topic: professional_profile
+    language: en
     question: Did Marcelo hold a researcher position at CONICET?
     answerable: true
     category: direct_fact
@@ -378,6 +418,8 @@ questions:
     notes: Reviewed against website_research
 
   - question_id: work_003
+    topic: professional_profile
+    language: en
     question: Did Marcelo participate in evaluation activities at CONICET?
     answerable: true
     category: direct_fact
@@ -395,23 +437,27 @@ questions:
     notes: Reviewed against website_teaching
 
   - question_id: work_004
+    topic: professional_profile
+    language: en
     question: Has Marcelo been involved in editorial activities?
     answerable: true
     category: direct_fact
     expected_document_ids:
-      - cv_meetings
+      - cv_meetings_en
     relevant_chunk_ids:
-      - cv_meetings_chunk_016
+      - cv_meetings_en_chunk_016
     expected_claims:
       - claim: >
           Marcelo served on the editorial committee of the Bulletin of the
           Argentine Astronomical Association as a technical editor.
         source_document_ids:
-          - cv_meetings
+          - cv_meetings_en
     difficulty: direct
     notes: Reviewed against website_research
 
   - question_id: industry_001
+    topic: professional_profile
+    language: en
     question: What industry experience does Marcelo have?
     answerable: true
     category: direct_fact
@@ -433,6 +479,8 @@ questions:
     notes: Reviewed against the industry experience summaries on the home and projects pages.
 
   - question_id: industry_002
+    topic: professional_profile
+    language: en
     question: Did Marcelo work at IThreex?
     answerable: true
     category: direct_fact
@@ -454,6 +502,8 @@ questions:
     notes: Reviewed against website_research
 
   - question_id: industry_003
+    topic: professional_profile
+    language: en
     question: Did Marcelo work at Mercado Libre?
     answerable: true
     category: direct_fact
@@ -475,6 +525,8 @@ questions:
     notes: Reviewed against website_home and website_research
 
   - question_id: industry_006
+    topic: professional_profile
+    language: en
     question: Does Marcelo have experience with international trade systems?
     answerable: true
     category: direct_fact
@@ -492,6 +544,8 @@ questions:
     notes: Participated in the development of a dashboard for international trading
 
   - question_id: industry_007
+    topic: professional_profile
+    language: en
     question: Does Marcelo have experience with time-series modeling?
     answerable: true
     category: direct_fact
@@ -512,6 +566,8 @@ questions:
     notes: The indexed corpus supports time-series experience through forecasting and variable-star classification work.
 
   - question_id: leadership_006
+    topic: professional_profile
+    language: en
     question: What leadership experience does Marcelo have?
     answerable: true
     category: direct_fact
@@ -535,6 +591,8 @@ questions:
     notes: Reviewed against website_projects
 
   - question_id: not_experience_002
+    topic: professional_profile
+    language: en
     question: What experience does Marcelo have with Apache Kafka?
     answerable: false
     category: unanswerable
@@ -547,6 +605,8 @@ questions:
       experience. The system should state that it lacks supporting evidence.
 
   - question_id: not_experience_003
+    topic: professional_profile
+    language: en
     question: What experience does Marcelo have with Databricks?
     answerable: false
     category: unanswerable
@@ -559,6 +619,8 @@ questions:
       experience. The system should state that it lacks supporting evidence.
 
   - question_id: papers_000
+    topic: scientific_publications
+    language: en
     question: Did Marcelo coauthor papers with Sebastián Gurovich?
     answerable: true
     category: multi_document
@@ -590,6 +652,8 @@ questions:
       metadata, not a top-k full-text counting task.
 
   - question_id: papers_001
+    topic: scientific_publications
+    language: en
     question: Who has Marcelo coauthored papers about cosmic voids with?
     answerable: true
     category: multi_document
@@ -626,6 +690,8 @@ questions:
       Author spellings and initials should be normalized before deduplication.
 
   - question_id: papers_002
+    topic: scientific_publications
+    language: en
     question: Did Marcelo work on future virialized structures?
     answerable: true
     category: direct_fact
@@ -647,6 +713,8 @@ questions:
 
 
   - question_id: papers_003
+    topic: scientific_publications
+    language: en
     question: Which publications document Marcelo's work on astronomical binary systems?
     answerable: true
     category: multi_document
@@ -678,6 +746,8 @@ questions:
       stellar binaries documented in publication metadata.
 
   - question_id: papers_004
+    topic: scientific_publications
+    language: en
     question: What is the experience of Marcelo on protein folding?
     answerable: false
     category: unanswerable
@@ -688,6 +758,8 @@ questions:
     notes: >
 
   - question_id: papers_005
+    topic: scientific_publications
+    language: en
     question: What papers did Marcelo coauthor with Geoffrey Hinton?
     answerable: false
     category: unanswerable
@@ -698,6 +770,8 @@ questions:
     notes: >
 
   - question_id: papers_007
+    topic: scientific_publications
+    language: en
     question: What are the main results of his research on communicating galactic civilisations?
     answerable: true
     category: direct_fact
@@ -722,6 +796,8 @@ questions:
       This question requires paper-content evidence rather than metadata alone.
 
   - question_id: papers_008
+    topic: scientific_publications
+    language: en
     question: How many selected papers did Marcelo publish in Astronomy & Astrophysics?
     answerable: true
     category: quantitative
@@ -762,6 +838,8 @@ questions:
 # selected entries into the official benchmark and regenerating corpus_index.
   # Approach 1: contrast two evidence-backed tasks or systems.
   - question_id: comparison_deepz_vvv_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       How did the machine-learning task and methods differ between the VVV/VVVX
       galaxy work and DEEPz?
@@ -790,6 +868,8 @@ questions:
     notes: Reverse-authored contrast between classification/detection and regression.
 
   - question_id: comparison_corral_crossmatching_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       How do Corral and the astronomical cross-matching work address different
       data-engineering problems?
@@ -818,6 +898,8 @@ questions:
     notes: Reverse-authored platform-engineering versus entity-resolution comparison.
 
   - question_id: comparison_void_spin_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       What is the difference between the cosmic-void detection work and the
       galaxy-spin alignment analysis in their inference approach?
@@ -846,6 +928,8 @@ questions:
     notes: Reverse-authored unsupervised-discovery versus hypothesis-testing comparison.
 
   - question_id: comparison_arcovid_catalog_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       How did Arcovid19 and the VVV galaxy-catalogue work differ in the data
       products they built?
@@ -873,6 +957,8 @@ questions:
 
   # Approach 2: ask for ordered or dated evidence rather than a static fact.
   - question_id: temporal_education_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       What was the sequence from Marcelo's astronomy doctorate to his CONICET
       postdoctoral work?
@@ -880,26 +966,28 @@ questions:
     answer_mode: passage
     category: temporal
     expected_document_ids:
-      - cv_education
+      - cv_education_en
     relevant_chunk_ids:
-      - cv_education_chunk_000
-      - cv_education_chunk_001
+      - cv_education_en_chunk_000
+      - cv_education_en_chunk_001
     expected_claims:
       - claim: >
           Marcelo completed a Doctorate in Astronomy at Universidad Nacional de
           Córdoba from 2003 to 2009, with a thesis on low-luminosity satellite
           galaxies.
         source_document_ids:
-          - cv_education
+          - cv_education_en
       - claim: >
           He then held a CONICET postdoctoral position from 2009 to 2011 on
           the characterization of the Universe's large-scale structure.
         source_document_ids:
-          - cv_education
+          - cv_education_en
     difficulty: temporal
     notes: Reverse-authored chronological reasoning from consecutive CV chunks.
 
   - question_id: temporal_training_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       Which documented training came first: scientific programming with Python
       or the AWSome Day cloud-computing course?
@@ -907,24 +995,26 @@ questions:
     answer_mode: passage
     category: temporal
     expected_document_ids:
-      - cv_education
+      - cv_education_en
     relevant_chunk_ids:
-      - cv_education_chunk_002
-      - cv_education_chunk_003
+      - cv_education_en_chunk_002
+      - cv_education_en_chunk_003
     expected_claims:
       - claim: >
           The scientific-programming-with-Python course ran from July through
           December 2014.
         source_document_ids:
-          - cv_education
+          - cv_education_en
       - claim: >
           AWSome Day was a one-day online conference attended in June 2021.
         source_document_ids:
-          - cv_education
+          - cv_education_en
     difficulty: temporal
     notes: Tests date comparison and avoids treating course attendance as certification.
 
   - question_id: temporal_publication_span_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       Which indexed research topics appear at the early and recent ends of the
       publication record shown in the CV?
@@ -932,26 +1022,28 @@ questions:
     answer_mode: passage
     category: temporal
     expected_document_ids:
-      - cv_papers
+      - cv_papers_en
     relevant_chunk_ids:
-      - cv_papers_chunk_000
-      - cv_papers_chunk_006
+      - cv_papers_en_chunk_000
+      - cv_papers_en_chunk_006
     expected_claims:
       - claim: >
           The CV lists 2004 work on dynamical segregation of galaxies into
           groups and clusters.
         source_document_ids:
-          - cv_papers
+          - cv_papers_en
       - claim: >
           The recent end shown includes 2023 work on eclipsing-binary
           classification, CMB photons in extended galaxy haloes, and spin
           alignment around voids.
         source_document_ids:
-          - cv_papers
+          - cv_papers_en
     difficulty: temporal
     notes: Reverse-authored temporal span; response should not infer an exhaustive career history.
 
   - question_id: temporal_events_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       How did Marcelo's documented participation differ between the 2016
       national astronomy meeting and the 2018 Friends of Friends Meeting?
@@ -959,27 +1051,29 @@ questions:
     answer_mode: passage
     category: temporal
     expected_document_ids:
-      - cv_meetings
+      - cv_meetings_en
     relevant_chunk_ids:
-      - cv_meetings_chunk_000
-      - cv_meetings_chunk_001
+      - cv_meetings_en_chunk_000
+      - cv_meetings_en_chunk_001
     expected_claims:
       - claim: >
           At the 2016 national astronomy meeting, the CV records talks and
           posters, including two talks as a conference speaker.
         source_document_ids:
-          - cv_meetings
+          - cv_meetings_en
       - claim: >
           At the 2018 international Friends of Friends Meeting, the CV records
           scientific and organizing roles, including coordination of the
           organizing committee.
         source_document_ids:
-          - cv_meetings
+          - cv_meetings_en
     difficulty: temporal
     notes: Reverse-authored role comparison across dates.
 
   # Approach 3: require synthesis across related evidence, not a lookup.
   - question_id: multi_document_uncertainty_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       What evidence shows work on decision-making under uncertainty in both
       transient astronomy and public-health analytics?
@@ -1008,6 +1102,8 @@ questions:
     notes: Reverse-authored cross-domain synthesis.
 
   - question_id: multi_document_reusable_software_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       What evidence supports Marcelo's experience building reusable and
       maintainable scientific software, beyond a single named package?
@@ -1037,6 +1133,8 @@ questions:
     notes: Reverse-authored broad-evidence question; it should not overclaim sole authorship.
 
   - question_id: multi_document_mentoring_evaluation_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       What evidence documents both mentoring and formal evaluation work in
       Marcelo's academic activities?
@@ -1045,10 +1143,10 @@ questions:
     category: multi_document
     expected_document_ids:
       - website_teaching
-      - cv_outreach
+      - cv_outreach_en
     relevant_chunk_ids:
       - website_teaching_chunk_001
-      - cv_outreach_chunk_000
+      - cv_outreach_en_chunk_000
     expected_claims:
       - claim: >
           The teaching material documents PhD and undergraduate supervision,
@@ -1059,11 +1157,13 @@ questions:
           The CV documents roles evaluating theses, teaching appointments, and
           CONICET researcher-career applications.
         source_document_ids:
-          - cv_outreach
+          - cv_outreach_en
     difficulty: multi_document
     notes: Reverse-authored synthesis of mentorship and service evidence.
 
   - question_id: multi_document_data_product_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       How do the public materials connect Marcelo's statistics and data-mining
       expertise to durable, auditable data products?
@@ -1071,10 +1171,10 @@ questions:
     answer_mode: passage
     category: multi_document
     expected_document_ids:
-      - cv_expertise
+      - cv_expertise_en
       - website_projects
     relevant_chunk_ids:
-      - cv_expertise_chunk_000
+      - cv_expertise_en_chunk_000
       - website_projects_chunk_009
       - website_projects_chunk_010
     expected_claims:
@@ -1082,7 +1182,7 @@ questions:
           The public CV describes expertise in statistics, programming,
           large-volume data processing, data mining, and data visualization.
         source_document_ids:
-          - cv_expertise
+          - cv_expertise_en
       - claim: >
           The projects material describes reproducible pipelines that validate,
           enrich, and publish structured datasets with metadata and quality
@@ -1094,6 +1194,8 @@ questions:
 
   # Approach 4: deliberately ambiguous wording that a grounded assistant must resolve.
   - question_id: ambiguous_catalog_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       When the corpus refers to “catalog work,” does it mean creating a galaxy
       catalog or matching records between existing catalogs?
@@ -1120,6 +1222,8 @@ questions:
     notes: The desired response distinguishes two valid meanings instead of choosing one.
 
   - question_id: ambiguous_model_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       Does “model evaluation” in the corpus refer to predictive-model quality
       or to testing a scientific hypothesis?
@@ -1148,6 +1252,8 @@ questions:
 
   # Approach 5: quantitative questions grounded in local, inspectable passages.
   - question_id: quantitative_vvv_catalogue_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       How many galaxy candidates were in the Southern Galactic disc catalogue,
       and how many new galaxies did the Northern catalogue identify?
@@ -1174,6 +1280,8 @@ questions:
     notes: Reverse-authored quantity extraction across adjacent catalogue passages.
 
   - question_id: quantitative_toros_validation_001
+    topic: cross_source_reasoning
+    language: en
     question: >
       What validation-set counts are documented for the TOROS transient
       detection workflow?
@@ -1195,6 +1303,8 @@ questions:
 
   # Approach 6: false premises that should result in a scoped abstention.
   - question_id: false_premise_phd_computer_science_001
+    topic: cross_source_reasoning
+    language: en
     question: What was the title of Marcelo's PhD in Computer Science?
     answerable: false
     answer_mode: unanswerable
@@ -1206,6 +1316,8 @@ questions:
     notes: The indexed education material documents a PhD in Astronomy, not Computer Science.
 
   - question_id: false_premise_aws_certification_001
+    topic: cross_source_reasoning
+    language: en
     question: Which AWS professional certification did Marcelo obtain in 2021?
     answerable: false
     answer_mode: unanswerable
@@ -1217,6 +1329,8 @@ questions:
     notes: The corpus documents attendance at AWSome Day, not an AWS professional certification.
 
   - question_id: false_premise_kubernetes_cluster_001
+    topic: cross_source_reasoning
+    language: en
     question: Which Kubernetes cluster did Marcelo deploy for the TOROS project?
     answerable: false
     answer_mode: unanswerable
@@ -1228,6 +1342,8 @@ questions:
     notes: The indexed TOROS evidence does not support a Kubernetes deployment claim.
 
   - question_id: false_premise_arcovid_clinical_trial_001
+    topic: cross_source_reasoning
+    language: en
     question: What clinical trial did Arcovid19 run to validate its forecasts?
     answerable: false
     answer_mode: unanswerable
@@ -1240,6 +1356,8 @@ questions:
 
   # IThreex professional-experience sources, with matched English and Spanish questions.
   - question_id: ithreex_kolektor_delay_001
+    topic: ithreex_projects
+    language: en
     question: What did Marcelo work on in Kolektor MVP I?
     answerable: true
     category: direct_fact
@@ -1251,6 +1369,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_kolektor_forecast_001
+    topic: ithreex_projects
+    language: en
     question: What forecasting work did Marcelo do for Kolektor MVP II?
     answerable: true
     category: direct_fact
@@ -1262,6 +1382,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_pueblo_nativo_001
+    topic: ithreex_projects
+    language: en
     question: What customer analytics methods did Marcelo implement for Pueblo Nativo?
     answerable: true
     category: multi_document
@@ -1273,6 +1395,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_inverfin_001
+    topic: ithreex_projects
+    language: en
     question: What was Marcelo's contribution to the Inverfin branch analytics work?
     answerable: true
     category: direct_fact
@@ -1284,6 +1408,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_procordoba_001
+    topic: ithreex_projects
+    language: en
     question: How did Marcelo support export-opportunity analytics for ProCórdoba?
     answerable: true
     category: direct_fact
@@ -1295,6 +1421,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_ss_servicios_001
+    topic: ithreex_projects
+    language: en
     question: What data-engineering work did Marcelo do for SS Servicios?
     answerable: true
     category: direct_fact
@@ -1306,6 +1434,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_animalia_001
+    topic: ithreex_projects
+    language: en
     question: What was Marcelo's role in the AnimalIA cattle-weight project?
     answerable: true
     category: direct_fact
@@ -1317,6 +1447,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_molibdeno_001
+    topic: ithreex_projects
+    language: en
     question: What did Marcelo contribute to the Molibdeno AI product?
     answerable: true
     category: direct_fact
@@ -1328,6 +1460,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_animalia_deployment_001
+    topic: ithreex_projects
+    language: en
     question: Was the AnimalIA cattle-weight system deployed in production?
     answerable: false
     category: unanswerable
@@ -1338,6 +1472,8 @@ questions:
     notes: The available source explicitly does not establish deployment or a final client outcome.
 
   - question_id: ithreex_kolektor_delay_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿En qué trabajó Marcelo en el MVP I de Kolektor?
     answerable: true
     category: direct_fact
@@ -1349,6 +1485,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_kolektor_forecast_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Qué trabajo de previsión realizó Marcelo para el MVP II de Kolektor?
     answerable: true
     category: direct_fact
@@ -1360,6 +1498,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_pueblo_nativo_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Qué métodos de analítica de clientes implementó Marcelo para Pueblo Nativo?
     answerable: true
     category: direct_fact
@@ -1371,6 +1511,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_inverfin_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Cuál fue la contribución de Marcelo al trabajo de analítica de sucursales de Inverfin?
     answerable: true
     category: direct_fact
@@ -1382,6 +1524,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_procordoba_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Cómo apoyó Marcelo la analítica de oportunidades de exportación para ProCórdoba?
     answerable: true
     category: direct_fact
@@ -1393,6 +1537,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_ss_servicios_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Qué trabajo de ingeniería de datos realizó Marcelo para SS Servicios?
     answerable: true
     category: direct_fact
@@ -1404,6 +1550,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_animalia_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Cuál fue el rol de Marcelo en el proyecto AnimalIA de estimación de peso bovino?
     answerable: true
     category: direct_fact
@@ -1415,6 +1563,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_molibdeno_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿A qué contribuyó Marcelo en el producto de IA Molibdeno?
     answerable: true
     category: direct_fact
@@ -1426,6 +1576,8 @@ questions:
     difficulty: direct
 
   - question_id: ithreex_animalia_deployment_es_001
+    topic: ithreex_projects
+    language: es
     question: ¿Se desplegó en producción el sistema de estimación de peso bovino de AnimalIA?
     answerable: false
     category: unanswerable

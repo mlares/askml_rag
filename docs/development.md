@@ -216,6 +216,8 @@ The benchmark lives at `data/evaluation/questions.yaml`. Every answerable
 question should define:
 
 - a stable `question_id`;
+- a stable subject `topic` used for sliced metrics;
+- the `language` expected from the application's language selector;
 - the natural-language question;
 - category and difficulty;
 - an `answer_mode` when the answer comes from publication metadata;
@@ -233,6 +235,12 @@ Unanswerable questions must have no expected documents, relevant chunks, or
 expected claims. They are needed later to test abstention. Document metrics are
 aggregated over all answerable questions; passage metrics are aggregated only
 where full-text evidence labels apply.
+
+The evaluator applies the same language constraint as the application: chunks
+in the question's selected language and language-neutral chunks are eligible.
+Reports include the full aggregate plus slices by topic, language, and
+topic-language intersection. Keep translated labels aligned with translated
+document and chunk IDs so every expected passage is eligible under that filter.
 
 After editing the benchmark:
 
@@ -270,6 +278,8 @@ uv run python scripts/evaluate_retrieval.py \
 Supported methods:
 
 - `bm25`: lexical retrieval;
+- `planned_bm25`: language-filtered lexical retrieval with deterministic query
+  rewriting, source routing, RRF, diversification, and neighbor expansion;
 - `semantic`: normalized embedding similarity in memory;
 - `hybrid`: reciprocal-rank fusion of BM25 and semantic rankings.
 
@@ -306,6 +316,7 @@ HF_HUB_OFFLINE=1 uv run python scripts/evaluate_retrieval.py \
 Each report contains:
 
 - the complete experiment configuration;
+- full metrics and slices by topic, language, and topic-language intersection;
 - per-question expected and retrieved chunk IDs;
 - ranked parent document IDs, which identify the retrieved papers;
 - Recall, Precision, reciprocal rank, nDCG, and document recall at each `k`;
@@ -324,6 +335,9 @@ Interpret metrics carefully:
 Inspect low-scoring question records in the JSON report. Decide whether each
 failure comes from the corpus, chunk boundaries, benchmark labels, query
 wording, or the retriever before changing the implementation.
+
+Use `scripts/report_worst_questions.py REPORT` to rank answerable failures by
+the mean of their applicable passage recall, MRR, nDCG, and document recall.
 
 The older `evaluate_bm25.py`, `evaluate_semantic.py`, and related scripts are
 useful historical comparisons. New experiments should go through

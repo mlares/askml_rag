@@ -1,6 +1,7 @@
 document_id: arxiv_2105_01714
 title: "Drifting features: Detection and evaluation in the context of automatic RR Lyrae identification in the VVV"
 document_type: publication
+language: en
 year: 2021
 authors:
   - "J. B. Cabral"
@@ -21,4 +22,3 @@ topics:
   - "Astrophysics - Instrumentation and Methods for Astrophysics"
   - "Astrophysics - Astrophysics of Galaxies"
   - "Computer Science - Machine Learning"
-

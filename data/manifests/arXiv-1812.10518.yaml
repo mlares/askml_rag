@@ -1,6 +1,7 @@
 document_id: arxiv_1812_10518
 title: "Machine learning on difference image analysis: A comparison of methods for transient detection"
 document_type: publication
+language: en
 year: 2019
 authors:
   - "B. Sánchez"
@@ -27,4 +28,3 @@ topics:
   - "Techniques"
   - "Image processing"
   - "Astrophysics - Instrumentation and Methods for Astrophysics"
-

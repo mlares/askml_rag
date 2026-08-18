@@ -29,6 +29,8 @@ def make_question(relevant_chunk_ids: list[str]) -> EvaluationQuestion:
     return EvaluationQuestion(
         question_id="example_question_001",
         question="Example question?",
+        topic="professional_profile",
+        language="en",
         answerable=True,
         category="direct_fact",
         expected_document_ids=["example_source"],

@@ -55,15 +55,24 @@ uv run python scripts/generate_evaluation_corpus_index.py
 
 # 6. Evaluación oficial elegida. El nombre evita sobrescribir otra corrida.
 uv run python scripts/evaluate_retrieval.py \
-  --method bm25 \
+  --method planned_bm25 \
   --corpus full_text \
+  --questions \
+    data/evaluation/questions.yaml \
+    data/evaluation/questions_famaf_teaching_en.yaml \
+    data/evaluation/questions_famaf_teaching_es.yaml \
+  --full-text-chunks \
+    data/processed/chunks/chunks.jsonl \
+    data/processed/famaf_teaching_chunks/chunks.jsonl \
   --k 7 \
-  --output reports/retrieval/bm25_full_text_k7.json
+  --output reports/retrieval/planned_bm25_full_text_k7_by_topic_language.json
 ```
 
 El último comando muestra `chunk recall`, `MRR`, `nDCG`, `document recall`,
-latencia mediana y P95. El informe JSON conserva además la recuperación de
-cada pregunta: úsalo para inspeccionar fallos, no solo el promedio.
+latencia mediana y P95. También muestra el agregado completo y los cortes por
+idioma y por tema-idioma. El informe JSON conserva esos agregados y la
+recuperación de cada pregunta: úsalo para inspeccionar fallos, no solo el
+promedio.
 
 ## Consultas exhaustivas de coautoría
 
@@ -130,11 +139,7 @@ pueden haber cambiado aunque el texto sea el mismo.
    `data/evaluation/questions_es.draft.yaml` es una traducción candidata: sus
    `relevant_chunk_ids` conservan etiquetas inglesas y deben revisarse contra
    los chunks traducidos antes de renombrarla a `questions_es.yaml`.
-4. **Evaluación por idioma.** El evaluador actual usa
-   `questions.yaml` de forma fija. Falta un argumento `--questions` y una
-   convención de informes por idioma para medir el filtro `es` y el filtro
-   `en` por separado.
-5. **Revisión humana de traducciones y procedencia de citas.** Las
+4. **Revisión humana de traducciones y procedencia de citas.** Las
    traducciones facilitan retrieval; la fuente original sigue siendo la
    autoridad. Antes de una publicación pública conviene mostrar esa relación
    junto a una cita derivada.

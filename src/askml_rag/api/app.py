@@ -20,7 +20,8 @@ from askml_rag.evaluation.runner import load_chunks
 from askml_rag.generation.grounded import GroundedAnswer, GroundedGenerator
 from askml_rag.generation.openai_provider import OpenAIResponsesLLM
 from askml_rag.models import Language, RetrievalFilters
-from askml_rag.retrieval.bm25 import BM25Retriever
+from askml_rag.retrieval.hybrid import Retriever
+from askml_rag.retrieval.planned_bm25 import PlannedBM25Retriever
 
 
 DEFAULT_CHUNKS_PATH = Path("data/processed/chunks/chunks.jsonl")
@@ -102,16 +103,18 @@ class AskService:
 
     def __init__(
         self,
-        retriever: BM25Retriever,
+        retriever: Retriever,
         generator: GroundedGenerator,
         *,
         retrieval_limit: int = RETRIEVAL_LIMIT,
+        retriever_name: str = "bm25",
     ) -> None:
         if retrieval_limit <= 0:
             raise ValueError("retrieval_limit must be greater than zero.")
         self.retriever = retriever
         self.generator = generator
         self.retrieval_limit = retrieval_limit
+        self.retriever_name = retriever_name
 
     def ask(self, question: str, language: Language) -> AskResponse:
         retrieved_chunks = self.retriever.search(
@@ -129,6 +132,7 @@ class AskService:
         )
         return AskResponse(
             **answer.model_dump(),
+            retriever=self.retriever_name,
             retrieval_limit=self.retrieval_limit,
             retrieved_chunk_ids=[chunk.chunk_id for chunk in retrieved_chunks],
             query_language=language,
@@ -146,8 +150,9 @@ def build_default_service() -> AskService:
 
     chunks = load_chunks(DEFAULT_CHUNKS_PATH)
     return AskService(
-        BM25Retriever(chunks),
+        PlannedBM25Retriever(chunks),
         GroundedGenerator(OpenAIResponsesLLM()),
+        retriever_name="planned_bm25",
     )
 
 

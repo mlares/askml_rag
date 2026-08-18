@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Respuestas fundamentadas sobre el trabajo e investigación públicos de Marcelo Lares."
+    >
+    <title>AskML RAG</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow" data-i18n="eyebrow">Asistente de investigación del portfolio</p>
+        <h1>AskML RAG</h1>
+        <p class="intro" data-i18n="intro">
+          Pregunta sobre el trabajo profesional y la investigación públicos de Marcelo Lares.
+          Las respuestas se fundamentan en fuentes recuperadas.
+        </p>
+        <aside class="public-data-disclaimer">
+          <strong data-i18n="disclaimerTitle">Asistente con datos públicos.</strong>
+          <span data-i18n="disclaimerText">Esta herramienta experimental usa un corpus público curado y puede estar incompleto. Verifica las fuentes citadas; no envíes información privada, sensible o confidencial.</span>
+        </aside>
+      </header>
+
+      <section class="ask-card" aria-labelledby="ask-heading">
+        <h2 id="ask-heading" data-i18n="askHeading">Haz una pregunta</h2>
+        <form id="ask-form">
+          <fieldset class="language-selector">
+            <legend data-i18n="languageLegend">Idioma de la pregunta y la respuesta</legend>
+            <div class="language-options" role="radiogroup">
+              <input id="language-es" name="language" type="radio" value="es" checked>
+              <label for="language-es" data-i18n="spanish">Español</label>
+              <input id="language-en" name="language" type="radio" value="en">
+              <label for="language-en" data-i18n="english">English</label>
+            </div>
+          </fieldset>
+          <label for="question" data-i18n="questionLabel">Pregunta</label>
+          <textarea
+            id="question"
+            name="question"
+            rows="3"
+            maxlength="1000"
+            placeholder="Por ejemplo: ¿Qué investigación hizo Marcelo sobre vacíos cósmicos?"
+            required
+          ></textarea>
+          <div class="form-footer">
+            <p class="hint" data-i18n="formHint">Solo se usan fuentes públicas del corpus.</p>
+            <button id="submit-button" type="submit" data-i18n="askButton">Preguntar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="about-card" aria-labelledby="about-heading">
+        <h2 id="about-heading" data-i18n="aboutHeading">Acerca de este asistente</h2>
+        <p data-i18n="aboutText">
+          Busca un corpus público curado sobre Marcelo Lares y solo responde cuando las fuentes recuperadas aportan evidencia.
+        </p>
+        <ul>
+          <li data-i18n="aboutItemOne">Abre cada enlace y verifica la evidencia citada.</li>
+          <li data-i18n="aboutItemTwo">“No lo sé” significa que las fuentes disponibles no fueron suficientes.</li>
+          <li data-i18n="aboutItemThree">Las preguntas no se conservan en los registros de solicitudes.</li>
+        </ul>
+        <p class="hint" data-i18n="aboutHint">
+          Para proteger el servicio, las preguntas tienen límites de frecuencia y tiempo. Este es un proyecto experimental de portfolio, no un buscador web general.
+        </p>
+      </section>
+
+      <section id="result" class="result" aria-live="polite" hidden>
+        <p id="result-status" class="result-status" hidden></p>
+
+        <div id="answer-state" hidden>
+          <h2 data-i18n="answerHeading">Respuesta</h2>
+          <p id="answer-text" class="answer-text"></p>
+          <section aria-labelledby="sources-heading">
+            <h3 id="sources-heading" data-i18n="sourcesHeading">Fuentes</h3>
+            <div id="citations" class="citations"></div>
+          </section>
+        </div>
+
+        <div id="abstention-state" hidden>
+          <h2 data-i18n="abstentionHeading">No lo sé a partir de las fuentes disponibles</h2>
+          <p id="abstention-message"></p>
+          <p class="hint" data-i18n="abstentionHint">
+            Prueba con una pregunta más específica o consulta sobre el trabajo público, proyectos, docencia o publicaciones de Marcelo.
+          </p>
+        </div>
+
+        <div id="error-state" hidden>
+          <h2 data-i18n="errorHeading">El asistente no está disponible temporalmente</h2>
+          <p id="error-message"></p>
+          <p class="hint" data-i18n="errorHint">Por favor, inténtalo de nuevo en unos instantes.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -16,11 +16,22 @@ def tokenize(text: str) -> list[str]:
 class BM25Retriever:
     """Lexical retriever over a fixed collection of chunks."""
 
-    def __init__(self, chunks: Sequence[Chunk]) -> None:
+    def __init__(
+        self,
+        chunks: Sequence[Chunk],
+        *,
+        include_metadata: bool = False,
+    ) -> None:
         self.chunks = list(chunks)
 
         if self.chunks:
-            tokenized_chunks = [tokenize(chunk.text) for chunk in self.chunks]
+            indexed_text = [
+                " ".join((chunk.title, *chunk.topics, chunk.text))
+                if include_metadata
+                else chunk.text
+                for chunk in self.chunks
+            ]
+            tokenized_chunks = [tokenize(text) for text in indexed_text]
             self.index: BM25Okapi | None = BM25Okapi(tokenized_chunks)
         else:
             self.index = None

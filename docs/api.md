@@ -15,13 +15,13 @@ one question.
 browser or client
   -> POST /ask with {"question": "...", "language": "es"}
   -> FastAPI validates the input
-  -> BM25 retrieves the selected top 7 public full-text chunks in that language
+  -> planned BM25 retrieves the selected top 7 public full-text chunks in that language
   -> grounded generator calls OpenAI and validates the output
   -> JSON response with answer, citations, and retrieval metadata
 ```
 
 The API deliberately fixes the retrieval choice to the configuration already
-selected by evaluation: BM25 over full-text chunks with `k=7`. A caller cannot
+selected by evaluation: planned BM25 over full-text chunks with `k=7`. A caller cannot
 silently change the model or retrieve a larger context through the request.
 
 ## Components
@@ -31,7 +31,8 @@ silently change the model or retrieve a larger context through the request.
 - `AskRequest` accepts one non-blank question, up to 1,000 characters, and a
   `language` of `es` or `en` (Spanish is the default). The language selects
   the bilingual retrieval filter and the requested answer language.
-- `AskService` is the application layer. It holds one BM25 index and one
+- `AskService` is the application layer. It holds planned language-specific
+  BM25 indexes and one
   generator in memory, so they are created once when the server starts rather
   than once per request.
 - `AskResponse` extends the existing `GroundedAnswer` with the retriever name,
@@ -101,7 +102,7 @@ The response has HTTP status `200` and looks conceptually like this:
   "answer": "...",
   "claims": [{"text": "...", "citation_ids": ["skills_chunk_001"]}],
   "citations": [{"chunk_id": "skills_chunk_001", "quote": "..."}],
-  "retriever": "bm25",
+  "retriever": "planned_bm25",
   "retrieval_limit": 7,
   "query_language": "es",
   "retrieved_chunk_ids": ["..."]

@@ -16,6 +16,8 @@ def make_chunk(
     chunk_id: str,
     document_id: str,
     text: str,
+    *,
+    language: str | None = None,
 ) -> Chunk:
     return Chunk(
         chunk_id=chunk_id,
@@ -25,6 +27,7 @@ def make_chunk(
         title=document_id,
         document_type="publication",
         source_url="https://example.org/paper",
+        language=language,
         topics=[],
         text=text,
     )
@@ -38,6 +41,8 @@ def make_question(
     return EvaluationQuestion(
         question_id="future_structures_001",
         question="future virialized structures",
+        topic="scientific_publications",
+        language="en",
         answerable=True,
         category="direct_fact",
         answer_mode=answer_mode,
@@ -92,6 +97,14 @@ def test_summary_mode_evaluates_publication_discovery() -> None:
     assert result.metrics["1"].document_recall == 1.0
     assert report.aggregate["1"].passage_evaluated_questions == 0
     assert report.aggregate["1"].mean_ndcg is None
+    assert report.aggregate_by_topic["scientific_publications"].question_count == 1
+    assert report.aggregate_by_language["en"].answerable_question_count == 1
+    assert (
+        report.aggregate_by_topic_and_language["scientific_publications"]["en"]
+        .aggregate["1"]
+        .mean_document_recall
+        == 1.0
+    )
 
 
 def test_two_stage_mode_records_paper_discovery_and_full_text_evidence() -> None:
@@ -151,6 +164,38 @@ def test_two_stage_mode_records_paper_discovery_and_full_text_evidence() -> None
     assert result.metrics["1"].document_recall == 1.0
 
 
+def test_evaluation_uses_each_questions_selected_language() -> None:
+    full_text = [
+        make_chunk(
+            "paper_future_es_chunk_000",
+            "paper_future_es",
+            "future virialized structures future virialized structures",
+            language="es",
+        ),
+        make_chunk(
+            "paper_future_chunk_000",
+            "paper_future",
+            "future virialized structures",
+            language="en",
+        ),
+        make_chunk("paper_voids_chunk_000", "paper_voids", "cosmic voids"),
+        make_chunk("paper_spin_chunk_000", "paper_spin", "galaxy spins"),
+        make_chunk("paper_clusters_chunk_000", "paper_clusters", "clusters"),
+    ]
+    config = RetrievalEvaluationConfig(k_values=[1])
+
+    report = run_evaluation(
+        [make_question("paper_future_chunk_000")],
+        full_text,
+        [],
+        config=config,
+        retriever_factory=BM25Retriever,
+    )
+
+    assert report.results[0].retrieved_chunk_ids == ["paper_future_chunk_000"]
+    assert report.results[0].metrics["1"].chunk_recall == 1.0
+
+
 def test_evaluation_report_is_written_as_json(tmp_path: Path) -> None:
     summaries = [
         make_chunk(
@@ -185,5 +230,6 @@ def test_evaluation_report_is_written_as_json(tmp_path: Path) -> None:
     payload = json.loads(path.read_text(encoding="utf-8"))
 
     assert payload["config"]["corpus_mode"] == "summaries"
+    assert payload["schema_version"] == "2"
     assert payload["aggregate"]["1"]["mean_chunk_recall"] is None
     assert payload["aggregate"]["1"]["mean_document_recall"] == 1.0

@@ -1,6 +1,7 @@
 document_id: arxiv_2202_13244
 title: "A statistical formalism for alignment analysis"
 document_type: publication
+language: en
 year: 2022
 authors:
   - "F. Dávila-Kurbán"
@@ -12,4 +13,3 @@ visibility: public
 topics:
   - "Methods: statistical"
   - "Methods: numerical"
-

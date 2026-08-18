@@ -1,6 +1,7 @@
 document_id: arxiv_2403_03098
 title: "Galaxies in the zone of avoidance: Misclassifications using machine learning tools"
 document_type: publication
+language: en
 year: 2024
 authors:
   - "P. Marchant Cortés"
@@ -25,4 +26,3 @@ topics:
   - "infrared: galaxies"
   - "X-rays: galaxies"
   - "Astrophysics - Astrophysics of Galaxies"
-

@@ -55,6 +55,8 @@ def test_evaluation_questions_validate() -> None:
     assert len(question_texts) == len(set(question_texts))
 
     for question in questions:
+        assert question.topic
+        assert question.language
         if question.answerable:
             assert question.expected_document_ids
             assert question.expected_claims
@@ -139,6 +141,8 @@ def test_evaluation_question_rejects_inconsistent_evidence_labels(
     payload = {
         "question_id": "example_001",
         "question": "An example question?",
+        "topic": "scientific_publications",
+        "language": "en",
         "answerable": True,
         "answer_mode": "passage",
         "category": "direct_fact",
@@ -161,6 +165,8 @@ def test_evaluation_question_rejects_unknown_fields() -> None:
             {
                 "question_id": "invalid_001",
                 "question": "An invalid benchmark question?",
+                "topic": "professional_profile",
+                "language": "en",
                 "answerable": False,
                 "category": "unanswerable",
                 "expected_document_ids": [],

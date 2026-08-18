@@ -1,6 +1,7 @@
 document_id: arxiv_1602_08492
 title: "Localization and Broadband Follow-up of the Gravitational-wave Transient GW150914"
 document_type: publication
+language: en
 year: 2016
 authors:
   - "B. P. Abbott"
@@ -211,4 +212,3 @@ topics:
   - "methods: observational"
   - "Astrophysics - High Energy Astrophysical Phenomena"
   - "General Relativity and Quantum Cosmology"
-

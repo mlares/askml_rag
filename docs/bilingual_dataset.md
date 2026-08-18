@@ -14,8 +14,7 @@ represented as an independently published source or used to add claims.
 
 ## Scope
 
-`scripts/translate_bilingual_dataset.py` translates only these non-paper
-sources:
+`scripts/translate_bilingual_dataset.py` translates these non-paper sources:
 
 - public-CV Markdown documents;
 - the curated skills document;
@@ -23,9 +22,10 @@ sources:
 - `personal_traits.md`, only after the owner confirms that its contents are
   appropriate for this public, externally processed corpus.
 
-It excludes all individual publication PDFs. The CV publication-list document
-is included because it is a CV source, but bibliographic titles, DOIs, and
-arXiv IDs are preserved rather than translated.
+`scripts/translate_publication_sources.py` separately translates the canonical
+text extracted from every publication PDF. It preserves bibliographic titles,
+DOIs, arXiv IDs, equations, references, and numeric data. The English PDF
+remains authoritative; the Spanish Markdown is a derived retrieval copy.
 
 ## Batch workflow and cost boundary
 
@@ -43,9 +43,8 @@ reports/bilingual_translation/tasks.json
 ```
 
 `tasks.json` records every source hash, output-token ceiling, and a conservative
-cost estimate. Inspect it before sending anything. The current inventory
-produces 14 requests: 13 source translations and one Spanish translation of
-the evaluation-question file.
+cost estimate. Inspect it before sending anything. Use `prepare --only-missing`
+to prepare only source counterparts whose target files do not exist.
 
 Submit only when the displayed estimate is at or below the chosen ceiling:
 
@@ -72,6 +71,36 @@ uv run python scripts/translate_bilingual_dataset.py apply
 `apply` refuses partial output, fenced text, malformed question YAML, and
 results whose input source changed after preparation. It writes translation
 sources, translation manifests, and `questions_es.draft.yaml`.
+
+Publication translations use the same guarded lifecycle and a separate set of
+artifacts:
+
+```bash
+uv run python scripts/translate_publication_sources.py prepare
+uv run python scripts/translate_publication_sources.py submit \
+  --max-cost-usd 0.65
+uv run python scripts/translate_publication_sources.py status
+uv run python scripts/translate_publication_sources.py apply
+```
+
+The publication workflow must be followed by the completeness test below.
+Provider success status alone does not prove that a long translation retained
+the whole paper. If any derived text is shorter than 75% of its canonical
+source, repair only those papers using bounded, paragraph-preserving segments:
+
+```bash
+uv run python scripts/repair_publication_translations.py prepare
+uv run python scripts/repair_publication_translations.py submit \
+  --max-cost-usd 0.24
+uv run python scripts/repair_publication_translations.py status
+uv run python scripts/repair_publication_translations.py apply
+```
+
+After applying either workflow, ingest the new Markdown manifests and rebuild
+the unified chunk corpus. `tests/test_bilingual_manifests.py` verifies unique
+document IDs, explicit languages, exactly one opposite-language counterpart
+per original, locally available source paths, and full-publication translation
+length completeness.
 
 ## API-key permissions
 

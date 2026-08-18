@@ -1,9 +1,10 @@
-document_id: cv_outreach
-title: Projects and grants
+document_id: cv_extension
+title: Outreach and public communication
 document_type: project
 authors:
   - Marcelo Lares
 source_path: sources/public/04_extension.md
+language: es
 visibility: public
 topics:
   - outreach

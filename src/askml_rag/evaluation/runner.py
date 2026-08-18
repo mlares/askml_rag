@@ -20,12 +20,18 @@ from askml_rag.evaluation.retrieval import (
     recall_fraction_at_k,
     reciprocal_rank_at_k,
 )
-from askml_rag.models import AnswerMode, Chunk, EvaluationQuestion, RetrievalFilters
+from askml_rag.models import (
+    AnswerMode,
+    Chunk,
+    EvaluationQuestion,
+    RetrievalFilters,
+)
 from askml_rag.retrieval.hybrid import Retriever
 
 
 class RetrievalMethod(StrEnum):
     bm25 = "bm25"
+    planned_bm25 = "planned_bm25"
     semantic = "semantic"
     hybrid = "hybrid"
 
@@ -61,7 +67,10 @@ class RetrievalEvaluationConfig(BaseModel):
             raise ValueError("candidate_limit must be at least the maximum k value.")
         if self.corpus_mode == CorpusMode.two_stage and self.paper_limit < maximum_k:
             raise ValueError("paper_limit must be at least the maximum k value.")
-        if self.method != RetrievalMethod.bm25 and not self.embedding_model:
+        if self.method in {
+            RetrievalMethod.semantic,
+            RetrievalMethod.hybrid,
+        } and not self.embedding_model:
             raise ValueError("An embedding_model is required for semantic retrieval.")
 
         return self
@@ -80,6 +89,8 @@ class MetricsAtK(BaseModel):
 class QuestionEvaluationResult(BaseModel):
     question_id: str
     question: str
+    topic: str
+    language: str
     answerable: bool
     category: str
     answer_mode: str
@@ -104,8 +115,16 @@ class AggregateMetricsAtK(BaseModel):
     mean_context_words: float
 
 
+class EvaluationMetricsSlice(BaseModel):
+    """Counts and aggregate metrics for one benchmark slice."""
+
+    question_count: int
+    answerable_question_count: int
+    aggregate: dict[str, AggregateMetricsAtK]
+
+
 class EvaluationReport(BaseModel):
-    schema_version: str = "1"
+    schema_version: str = "2"
     created_at: datetime
     config: RetrievalEvaluationConfig
     question_count: int
@@ -115,6 +134,12 @@ class EvaluationReport(BaseModel):
     latency_median_ms: float
     latency_p95_ms: float
     aggregate: dict[str, AggregateMetricsAtK]
+    aggregate_by_topic: dict[str, EvaluationMetricsSlice]
+    aggregate_by_language: dict[str, EvaluationMetricsSlice]
+    aggregate_by_topic_and_language: dict[
+        str,
+        dict[str, EvaluationMetricsSlice],
+    ]
     results: list[QuestionEvaluationResult]
 
 
@@ -205,6 +230,8 @@ def evaluate_question(
     return QuestionEvaluationResult(
         question_id=question.question_id,
         question=question.question,
+        topic=question.topic.value,
+        language=question.language.value,
         answerable=question.answerable,
         category=question.category.value,
         answer_mode=question.answer_mode.value,
@@ -262,6 +289,59 @@ def aggregate_results(
     return aggregate
 
 
+def build_metrics_slice(
+    results: Sequence[QuestionEvaluationResult],
+    *,
+    k_values: Sequence[int],
+) -> EvaluationMetricsSlice:
+    """Build counts and metrics for one selected result slice."""
+    return EvaluationMetricsSlice(
+        question_count=len(results),
+        answerable_question_count=sum(result.answerable for result in results),
+        aggregate=aggregate_results(results, k_values=k_values),
+    )
+
+
+def aggregate_grouped_results(
+    results: Sequence[QuestionEvaluationResult],
+    *,
+    k_values: Sequence[int],
+) -> tuple[
+    dict[str, EvaluationMetricsSlice],
+    dict[str, EvaluationMetricsSlice],
+    dict[str, dict[str, EvaluationMetricsSlice]],
+]:
+    """Aggregate metrics by topic, language, and their intersection."""
+
+    def group_by(attribute: str) -> dict[str, list[QuestionEvaluationResult]]:
+        groups: dict[str, list[QuestionEvaluationResult]] = {}
+        for result in results:
+            groups.setdefault(getattr(result, attribute), []).append(result)
+        return groups
+
+    topic_groups = group_by("topic")
+    language_groups = group_by("language")
+    by_topic = {
+        topic: build_metrics_slice(group, k_values=k_values)
+        for topic, group in sorted(topic_groups.items())
+    }
+    by_language = {
+        language: build_metrics_slice(group, k_values=k_values)
+        for language, group in sorted(language_groups.items())
+    }
+    by_topic_and_language = {
+        topic: {
+            language: build_metrics_slice(
+                [result for result in group if result.language == language],
+                k_values=k_values,
+            )
+            for language in sorted({result.language for result in group})
+        }
+        for topic, group in sorted(topic_groups.items())
+    }
+    return by_topic, by_language, by_topic_and_language
+
+
 def run_evaluation(
     questions: Sequence[EvaluationQuestion],
     full_text_chunks: Sequence[Chunk],
@@ -292,6 +372,10 @@ def run_evaluation(
     for question in questions:
         started = time.perf_counter()
         selected_summaries: list[Chunk] = []
+        language_filters = RetrievalFilters(
+            languages=[question.language],
+            include_unknown_language=True,
+        )
 
         if config.corpus_mode == CorpusMode.two_stage:
             assert summary_retriever is not None
@@ -299,12 +383,17 @@ def run_evaluation(
             selected_summaries = summary_retriever.search(
                 question.question,
                 limit=config.paper_limit,
+                filters=language_filters,
             )
             document_ids = unique_document_ids(selected_summaries)
             retrieved_chunks = full_text_retriever.search(
                 question.question,
                 limit=maximum_k,
-                filters=RetrievalFilters(document_ids=document_ids),
+                filters=RetrievalFilters(
+                    document_ids=document_ids,
+                    languages=[question.language],
+                    include_unknown_language=True,
+                ),
             )
             retrieved_document_ids = document_ids
         else:
@@ -312,6 +401,7 @@ def run_evaluation(
             retrieved_chunks = retriever.search(
                 question.question,
                 limit=maximum_k,
+                filters=language_filters,
             )
             retrieved_document_ids = unique_document_ids(retrieved_chunks)
             if config.corpus_mode == CorpusMode.summaries:
@@ -340,6 +430,10 @@ def run_evaluation(
             )
         )
 
+    by_topic, by_language, by_topic_and_language = aggregate_grouped_results(
+        results,
+        k_values=config.k_values,
+    )
     return EvaluationReport(
         created_at=datetime.now(UTC),
         config=config,
@@ -350,6 +444,9 @@ def run_evaluation(
         latency_median_ms=statistics.median(latencies) if latencies else 0.0,
         latency_p95_ms=percentile(latencies, 0.95),
         aggregate=aggregate_results(results, k_values=config.k_values),
+        aggregate_by_topic=by_topic,
+        aggregate_by_language=by_language,
+        aggregate_by_topic_and_language=by_topic_and_language,
         results=results,
     )
 

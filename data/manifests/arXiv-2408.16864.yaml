@@ -1,6 +1,7 @@
 document_id: arxiv_2408_16864
 title: "The PAU survey: Enhancing photometric redshift estimation using DEEPz"
 document_type: publication
+language: en
 year: 2025
 authors:
   - "I. V. Daza-Perilla"
@@ -34,4 +35,3 @@ topics:
   - "galaxies: distances and redshifts"
   - "galaxies: high-redshift"
   - "Astrophysics - Astrophysics of Galaxies"
-

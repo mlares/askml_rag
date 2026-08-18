@@ -6,6 +6,10 @@ goal is to answer questions from a bounded corpus, expose the exact papers and
 chunks used as evidence, and abstain when the corpus does not support an
 answer.
 
+Every canonical source has explicit English and Spanish retrieval counterparts.
+Translated documents retain `translation_of` provenance and never replace the
+original source as the factual authority.
+
 The repository currently implements corpus normalization, PDF and Markdown
 ingestion, publication metadata generation, chunking, BM25 and semantic
 retrieval, hybrid reciprocal-rank fusion, local Qdrant indexing, a
@@ -21,8 +25,8 @@ request IDs, provider timeouts, and privacy-safe request logs.
 
 The local application is intentionally a public-corpus assistant, not a
 general web-search chatbot. It serves a browser interface at `GET /` and a
-machine-readable endpoint at `POST /ask`. The server runs BM25 retrieval over
-the evaluated full-text corpus (`k=7`), calls the grounded generator, and
+machine-readable endpoint at `POST /ask`. The server runs planned BM25
+retrieval over the evaluated full-text corpus (`k=7`), calls the grounded generator, and
 returns an answer with literal source quotes or an evidence-based abstention.
 
 The public interface tells visitors that the corpus may be incomplete and that
@@ -160,26 +164,38 @@ uv run python scripts/search_qdrant.py \
 
 ## Run retrieval evaluation
 
-The unified runner compares `bm25`, `semantic`, and `hybrid` retrieval. It can
+The unified runner compares `bm25`, `planned_bm25`, `semantic`, and `hybrid`
+retrieval. `planned_bm25` adds deterministic query rewriting, corpus routing,
+reciprocal-rank fusion, broad-query diversification, and adjacent-section
+expansion. The runner can
 search `full_text`, `summaries`, `combined`, or use a `two_stage` summary-first
 paper selection strategy.
 
 ```bash
 uv run python scripts/evaluate_retrieval.py \
-  --method bm25 \
+  --method planned_bm25 \
   --corpus combined \
   --k 3 5 10
 ```
 
 Reports are written to `reports/retrieval/`. Each JSON report records the
-configuration, aggregate metrics, latency, context size, and the ranked chunk
-and document IDs for every benchmark question.
+configuration, full aggregate metrics, topic/language slices, latency, context
+size, and the ranked chunk and document IDs for every benchmark question. The
+evaluator applies each question's selected-language filter in the same way as
+the application.
 
 Example semantic and hybrid runs:
 
 ```bash
 uv run python scripts/evaluate_retrieval.py --method semantic --corpus full_text
 uv run python scripts/evaluate_retrieval.py --method hybrid --corpus combined
+```
+
+Rank the weakest answerable questions in any generated report with:
+
+```bash
+uv run python scripts/report_worst_questions.py \
+  reports/retrieval/planned_bm25_full_text_k7_by_topic_language.json
 ```
 
 Use `--output PATH` to preserve a named experiment and `--help` to inspect all

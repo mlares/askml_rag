@@ -1,0 +1,24 @@
+.git/
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.coverage
+
+# Local/private inputs and generated artifacts that are not required by the
+# public runtime image. The full-text chunk corpus is explicitly re-included.
+data/raw/
+data/processed/**
+!data/processed/chunks/
+!data/processed/chunks/chunks.jsonl
+reports/
+notebooks/
+sources/private/
+sources/public/
+
+tests/
+docs/
+process/

@@ -1,231 +1,243 @@
-# Deploy AskML RAG to Google Cloud Run
+# Desplegar AskML RAG en Google Cloud Run
 
-This procedure publishes the existing local FastAPI application as one public
-Cloud Run service. The service provides both the browser UI at `/` and the
-same-origin `POST /ask` endpoint. The personal website links to that service;
-it does not need to host the application or hold the OpenAI key.
+Este procedimiento publica la aplicación FastAPI como un servicio público de
+Cloud Run. El servicio entrega la interfaz web en `/` y el endpoint
+`POST /ask`; el sitio personal solo enlaza al chatbot y no contiene la clave
+de OpenAI.
 
-## Scope and preconditions
+La imagen `askml:v1` ya fue subida a Artifact Registry. El digest
+`sha256:...` que muestra `docker push` confirma que Artifact Registry recibió
+la imagen completa.
 
-The deployment image contains application code, static assets, Python runtime
-dependencies, and the evaluated retrieval corpus:
+```mermaid
+flowchart TD
+    A["www.mlares.space<br/>GitHub Pages"] -->|"Chat with AskML"| B["Cloud Run<br/>UI + FastAPI"]
+    B --> C["Corpus de chunks + BM25"]
+    B --> D["OpenAI API"]
+    E["Secret Manager<br/>OPENAI_API_KEY"] --> B
+```
+
+## Alcance y requisitos
+
+La imagen contiene el código, los activos estáticos, las dependencias de
+ejecución y el corpus evaluado en:
 
 ```text
 data/processed/chunks/chunks.jsonl
 ```
 
-The corpus is generated and ignored by Git. It is about 9 MB in the current
-workspace, so the Docker build must be run from a local checkout where it has
-already been built. Do not copy raw PDFs, `data/raw/`, `.env`, reports, private
-sources, or other working-tree artifacts into the image.
+El corpus se genera localmente y está ignorado por Git. Antes de construir una
+imagen, verifica que exista y que su publicación sea compatible con las
+licencias y reglas de visibilidad de todas las fuentes indexadas. No copies
+`data/raw/`, PDFs, informes, fuentes privadas ni `.env` a la imagen.
 
-Before building, confirm that publicly serving the derived chunk text is
-compatible with the licences and visibility rules of every indexed source.
-The original sources remain authoritative.
+Cloud Run inyecta la variable `PORT`; Uvicorn debe escuchar en
+`0.0.0.0:$PORT`, nunca en `127.0.0.1`. La versión `v1` contiene el `EXPOSE
+8081` y el comando sin `exec` de una versión anterior. No impide el despliegue
+porque Uvicorn usa el `PORT` inyectado por Cloud Run, pero la siguiente imagen
+debe corregir ambos detalles.
 
-The Dockerfile starts the FastAPI application factory with Uvicorn on
-`0.0.0.0:$PORT`. Cloud Run injects `PORT` into the container; its default is
-`8080` when configured as below.
-
-The public application uses planned BM25, not semantic retrieval or Qdrant.
-`requirements-cloudrun.txt` therefore contains only the runtime imports used
-by this web service. Its direct dependency versions mirror `uv.lock`; update
-the two together whenever one of those runtime imports changes. This avoids
-putting Torch/CUDA, notebook, and local experimentation dependencies in the
-public container image.
-
-## 1. Validate the release candidate
-
-Run from the repository root:
+## 1. Habilitar los servicios necesarios
 
 ```bash
-uv run pytest -q
-uv run ruff check .
-git diff --check
-test -s data/processed/chunks/chunks.jsonl
-```
-
-Use an immutable image tag, normally the commit SHA, so that the deployed
-corpus and code revision can be identified together:
-
-```bash
-export IMAGE_TAG="$(git rev-parse --short HEAD)"
-```
-
-## 2. Build and test the image locally
-
-```bash
-docker build --tag askml-rag:local .
-
-docker run --rm \
-  --publish 8080:8080 \
-  --env PORT=8080 \
-  --env OPENAI_API_KEY \
-  askml-rag:local
-```
-
-In a second terminal, test the UI and one supported request:
-
-```bash
-curl --fail http://localhost:8080/
-
-curl -X POST http://localhost:8080/ask \
-  -H 'Content-Type: application/json' \
-  -d '{"question":"What experience does Marcelo have with recommendation systems?","language":"en"}'
-```
-
-The second request makes a real OpenAI request and can incur cost. The image
-does not currently expose a dedicated `/healthz` route; add one before using an
-application-level Cloud Run health check.
-
-## 3. Configure the Google Cloud project
-
-Install the Google Cloud CLI, authenticate, and define deployment variables.
-Replace the example region with a region appropriate for the intended audience.
-
-```bash
-gcloud auth login
-
-export PROJECT_ID="YOUR_PROJECT_ID"
-export REGION="us-central1"
-export REPOSITORY="askml-rag"
-export SERVICE="askml-rag"
-export SERVICE_ACCOUNT="askml-rag-run"
-
-gcloud config set project "$PROJECT_ID"
-gcloud config set run/region "$REGION"
-
 gcloud services enable \
   run.googleapis.com \
-  artifactregistry.googleapis.com \
-  secretmanager.googleapis.com
+  secretmanager.googleapis.com \
+  artifactregistry.googleapis.com
 ```
 
-Create a private Artifact Registry repository for Docker images:
+## 2. Crear la identidad de la aplicación
+
+Ejecuta este paso una sola vez. Una cuenta de servicio dedicada evita que el
+chatbot use una identidad genérica de ejecución:
 
 ```bash
-gcloud artifacts repositories create "$REPOSITORY" \
-  --repository-format=docker \
-  --location="$REGION"
+gcloud iam service-accounts create askml-runner \
+  --display-name="AskML Cloud Run runtime"
 ```
 
-Create a dedicated Cloud Run service account. It needs only access to the
-OpenAI key secret; it does not need broad project access.
+La cuenta resultante es:
 
-```bash
-gcloud iam service-accounts create "$SERVICE_ACCOUNT" \
-  --display-name="AskML RAG Cloud Run service"
-
-export SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com"
+```text
+askml-runner@askml-505521.iam.gserviceaccount.com
 ```
 
-## 4. Store the OpenAI key in Secret Manager
+## 3. Guardar la API key en Secret Manager
 
-Use a separate OpenAI project key for the public application. Do not reuse a
-development key and do not put the value in Git, Docker build arguments, or
-the image.
+Crea el secreto una sola vez:
 
 ```bash
-gcloud secrets create askml-openai-api-key \
+gcloud secrets create openai-api-key \
   --replication-policy=automatic
+```
 
+Carga la clave desde `.env` sin imprimir su valor:
+
+```bash
+set -a
+source .env
+set +a
+
+test -n "$OPENAI_API_KEY" \
+  && echo "OPENAI_API_KEY cargada correctamente" \
+  || echo "ERROR: OPENAI_API_KEY no encontrada"
+```
+
+Guárdala como una versión del secreto y elimínala de la sesión de terminal:
+
+```bash
 printf '%s' "$OPENAI_API_KEY" | \
-  gcloud secrets versions add askml-openai-api-key --data-file=-
+  gcloud secrets versions add openai-api-key \
+    --data-file=-
 
-gcloud secrets add-iam-policy-binding askml-openai-api-key \
-  --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
+unset OPENAI_API_KEY
+```
+
+`.env` sigue únicamente en el equipo local: no se incorpora a la imagen ni a
+Git. Para actualizar una clave, repite solamente el comando
+`gcloud secrets versions add` y despliega una nueva revisión que use
+`openai-api-key:latest`.
+
+## 4. Permitir que el contenedor lea el secreto
+
+```bash
+gcloud secrets add-iam-policy-binding openai-api-key \
+  --member="serviceAccount:askml-runner@askml-505521.iam.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 ```
 
-Set an OpenAI project budget alert and restrictive model/rate limits before
-making the service public. Budget alerts alone should not be treated as a hard
-spending ceiling; preserve the application rate limit and add an edge-level
-rate limit before advertising the site broadly.
+El permiso se aplica solo a este secreto, siguiendo el principio de mínimo
+privilegio. Consulta el [control de acceso de Secret
+Manager](https://docs.cloud.google.com/secret-manager/docs/access-control).
 
-## 5. Push the container image
-
-```bash
-gcloud auth configure-docker "${REGION}-docker.pkg.dev"
-
-export IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${SERVICE}:${IMAGE_TAG}"
-
-docker tag askml-rag:local "$IMAGE"
-docker push "$IMAGE"
-```
-
-## 6. Deploy the public Cloud Run service
-
-The initial configuration limits cost and concurrency. It uses one instance
-and one concurrent request because the current rate limiter and retrieval
-indexes are in process memory.
+## 5. Desplegar en Cloud Run
 
 ```bash
-gcloud run deploy "$SERVICE" \
-  --image "$IMAGE" \
-  --region "$REGION" \
-  --service-account "$SERVICE_ACCOUNT_EMAIL" \
-  --set-secrets "OPENAI_API_KEY=askml-openai-api-key:latest" \
-  --allow-unauthenticated \
-  --port 8080 \
-  --cpu 1 \
-  --memory 1Gi \
-  --concurrency 1 \
-  --max-instances 1 \
-  --min-instances 0 \
-  --timeout 30
+gcloud run deploy askml \
+  --image=southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml:v1 \
+  --region=southamerica-east1 \
+  --platform=managed \
+  --service-account=askml-runner@askml-505521.iam.gserviceaccount.com \
+  --set-secrets=OPENAI_API_KEY=openai-api-key:latest \
+  --port=8080 \
+  --cpu=1 \
+  --memory=512Mi \
+  --concurrency=4 \
+  --timeout=90 \
+  --min=0 \
+  --max=2 \
+  --allow-unauthenticated
 ```
 
-Cloud Run prints the public HTTPS `run.app` service URL after a successful
-deployment. `--allow-unauthenticated` is required for visitors to use the
-browser UI without Google credentials.
+La configuración inicial tiene estos efectos:
 
-## 7. Verify the deployed revision
+| Parámetro | Efecto |
+| --- | --- |
+| `min=0` | No quedan instancias encendidas cuando no hay tráfico. |
+| `max=2` | Limita el crecimiento inesperado del servicio. |
+| `concurrency=4` | Cada instancia puede procesar hasta cuatro solicitudes concurrentes. |
+| `memory=512Mi` | Punto inicial razonable para BM25 y un corpus pequeño. |
+| `timeout=90` | Permite esperar la respuesta de OpenAI. |
+| `allow-unauthenticated` | Cualquier visitante puede abrir el chatbot. |
+| `set-secrets` | La clave se inyecta solo durante la ejecución. |
+
+Cloud Run crea revisiones y escala automáticamente. Las configuraciones mínima
+y máxima pueden modificarse después; consulta la [configuración de Cloud
+Run](https://docs.cloud.google.com/run/docs/configuring) y el uso de
+[secretos en Cloud Run](https://docs.cloud.google.com/run/docs/configuring/services/secrets).
+
+Importante: `max=2` limita el costo de cómputo de Cloud Run, pero no el número
+total de consultas ni el gasto de OpenAI. La cuota diaria de preguntas debe
+implementarse y almacenarse de manera compartida en la aplicación; el límite
+actual en memoria no constituye una cuota global entre instancias.
+
+## 6. Obtener la dirección `run.app`
+
+Al finalizar, `gcloud run deploy` muestra la URL. También se puede recuperar
+así:
 
 ```bash
-export SERVICE_URL="$(gcloud run services describe "$SERVICE" \
-  --region "$REGION" \
-  --format='value(status.url)')"
+SERVICE_URL="$(
+  gcloud run services describe askml \
+    --region=southamerica-east1 \
+    --format='value(status.url)'
+)"
 
-curl --fail "$SERVICE_URL/"
-
-curl -X POST "$SERVICE_URL/ask" \
-  -H 'Content-Type: application/json' \
-  -d '{"question":"¿Qué experiencia tiene Marcelo con sistemas de recomendación?","language":"es"}'
+printf '%s\n' "$SERVICE_URL"
 ```
 
-Verify a supported question, an unsupported question, malformed input, and
-the `429` rate-limit response. Inspect Cloud Run logs to confirm that logs
-contain request IDs and status/timing data but no question text, secrets, or
-source corpus content.
+La URL tendrá esta forma:
 
-## 8. Link from the personal website
-
-For the first release, add a normal link that opens the public service in a
-new tab:
-
-```html
-<a href="https://YOUR_SERVICE-...run.app/" target="_blank" rel="noopener">
-  Ask my public research and professional corpus
-</a>
+```text
+https://askml-xxxxxxxxxx-rj.a.run.app
 ```
 
-Do not embed the service in an iframe initially. It is easier to preserve the
-application's privacy notice, citations, and independent error handling in its
-own tab.
+Usa esa URL pública con HTTPS directamente en el botón de `www.mlares.space`.
+La URL actual del servicio es
+`https://askml-b2d6wau7ua-rj.a.run.app`.
 
-For a later stable custom subdomain such as `ask.example.com`, use a global
-external Application Load Balancer in front of Cloud Run, or Firebase Hosting.
-Cloud Run's direct domain-mapping feature is preview/limited availability and
-does not map a service below a path such as `example.com/ask`.
+## 7. Probar el servicio y revisar los logs
 
-## 9. Operational follow-up
+Abre `$SERVICE_URL` en el navegador. También se puede verificar que la
+interfaz sea accesible sin consumir una solicitud de OpenAI:
 
-Before increasing `--max-instances` or `--concurrency`, replace the in-memory
-per-client rate limiter with a proxy-aware/shared implementation and add
-application health/readiness endpoints. Add an edge rate limit or bot-control
-layer before public promotion, because every accepted `/ask` request can incur
-OpenAI usage.
+```bash
+curl -i "$SERVICE_URL/"
+```
 
-For each corpus or code change, rebuild chunks locally, build a newly tagged
-image, push it, deploy it as a new Cloud Run revision, and repeat the deployed
-smoke tests. Do not regenerate the corpus at container startup.
+Los endpoints ligeros `/health` y `/ready` responden sin invocar OpenAI:
+
+```bash
+curl -i "$SERVICE_URL/health"
+curl -i "$SERVICE_URL/ready"
+```
+
+Para una comprobación completa sin costo de modelo, usa el script de smoke test
+del repositorio; además valida que el placeholder de respuesta se oculte cuando
+el cliente muestra una respuesta:
+
+```bash
+SERVICE_URL="$SERVICE_URL" bash scripts/smoke_deployment.sh
+```
+
+Si una solicitud falla, revisa los logs:
+
+```bash
+gcloud run services logs read askml \
+  --region=southamerica-east1 \
+  --limit=100
+```
+
+También están disponibles en la [consola de Cloud
+Run](https://console.cloud.google.com/run?project=askml-505521). No registres
+claves, preguntas de visitantes ni contenido del corpus salvo que sea
+estrictamente necesario.
+
+## 8. Publicar una imagen corregida
+
+Después del primer despliegue, publica una etiqueta nueva; no reutilices
+`v1`. La versión corregida del Dockerfile debe incluir:
+
+```dockerfile
+EXPOSE 8080
+
+CMD ["/bin/sh", "-c", "exec uvicorn askml_rag.api:create_app --factory --host 0.0.0.0 --port ${PORT:-8080}"]
+```
+
+Construye y publica `v2`:
+
+```bash
+docker build -t askml:local .
+
+docker tag askml:local \
+  southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml:v2
+
+docker push \
+  southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml:v2
+```
+
+Repite el comando de despliegue de la sección 5 cambiando solo la imagen por
+la etiqueta `v2`. Cloud Run conserva `v1` como revisión anterior, por lo que
+es posible volver atrás si `v2` falla. Antes de publicar cualquier versión,
+ejecuta las pruebas del repositorio, verifica el corpus generado y prueba la
+imagen localmente con `.env`.

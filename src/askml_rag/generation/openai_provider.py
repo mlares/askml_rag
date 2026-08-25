@@ -17,6 +17,8 @@ from askml_rag.generation.grounded import (
 # DEFAULT_MODEL = "gpt-5.4-nano"
 DEFAULT_MODEL = "gpt-5.6-luna"
 DEFAULT_TIMEOUT_SECONDS = 20.0
+DEFAULT_MAX_OUTPUT_TOKENS = 600
+MAX_GENERATION_ATTEMPTS = 2
 
 
 class OpenAIParsedResponse(BaseModel):
@@ -41,11 +43,15 @@ class OpenAIResponsesLLM:
         api_key: str | None = None,
         client: Any | None = None,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+        max_output_tokens: int = DEFAULT_MAX_OUTPUT_TOKENS,
     ) -> None:
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be greater than zero.")
+        if max_output_tokens <= 0:
+            raise ValueError("max_output_tokens must be greater than zero.")
         self.model_version = model
         self.timeout_seconds = timeout_seconds
+        self.max_output_tokens = max_output_tokens
         if client is not None:
             self.client = client
             return
@@ -66,16 +72,23 @@ class OpenAIResponsesLLM:
         )
 
     def generate(self, request: GenerationRequest) -> LLMGenerationResponse:
-        response = self.client.responses.parse(
-            model=self.model_version,
-            input=[{"role": "user", "content": request.prompt}],
-            text_format=OpenAIParsedResponse,
-        )
-        parsed = response.output_parsed
-        if parsed is None:
-            raise RuntimeError(
-                "OpenAI returned no parsed structured output; inspect the response "
-                "status or refusal before retrying."
-            )
+        for attempt in range(MAX_GENERATION_ATTEMPTS):
+            try:
+                response = self.client.responses.parse(
+                    model=self.model_version,
+                    input=[{"role": "user", "content": request.prompt}],
+                    text_format=OpenAIParsedResponse,
+                    max_output_tokens=self.max_output_tokens,
+                )
+                parsed = response.output_parsed
+                if parsed is None:
+                    raise RuntimeError(
+                        "OpenAI returned no parsed structured output; inspect the "
+                        "response status or refusal before retrying."
+                    )
+                return LLMGenerationResponse.model_validate(parsed.model_dump())
+            except Exception:
+                if attempt + 1 == MAX_GENERATION_ATTEMPTS:
+                    raise
 
-        return LLMGenerationResponse.model_validate(parsed.model_dump())
+        raise AssertionError("The generation retry loop must return or raise.")

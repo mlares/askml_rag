@@ -39,6 +39,20 @@ def test_rewrite_query_removes_boilerplate_and_expands_gcp() -> None:
     assert "bigquery" in rewritten
 
 
+def test_rewrite_query_expands_course_terms_for_teaching_material() -> None:
+    rewritten = rewrite_query("What does the machine learning course cover?")
+
+    assert "curriculum" in rewritten
+    assert "syllabus" in rewritten
+
+
+def test_rewrite_query_expands_research_terms_without_profile_only_routing() -> None:
+    rewritten = rewrite_query("What research has Marcelo done?")
+
+    assert "publications" in rewritten
+    assert "coauthors" in rewritten
+
+
 def test_decompose_query_separates_multi_part_evidence_needs() -> None:
     assert decompose_query(
         "What evidence documents both mentoring and formal evaluation work?"

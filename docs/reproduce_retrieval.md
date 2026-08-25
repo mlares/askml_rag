@@ -16,6 +16,25 @@ los manifests. Los manifests sí se versionan y son la lista de fuentes
 autorizadas; no sustituyas una fuente ausente por otra sin actualizar y revisar
 su manifest.
 
+## Release baseline versionado
+
+`data/evaluation/release.yaml` fija el corpus, el tamaño de chunk, los tres
+archivos de preguntas oficiales y la configuración de retrieval para una
+release. El identificador actual es `2026.08.0`; no cambies sus entradas sin
+crear una nueva versión y regenerar el índice de identidad.
+
+Los archivos `questions_es.draft.yaml` y los índices o conjuntos de preguntas
+IThreex separados no forman parte de la release: el primero aún necesita
+revisión humana y los segundos ya están incluidos en el corpus canónico y en
+`questions.yaml`. No combines los directorios de chunks suplementarios con el
+corpus canónico, porque repiten IDs.
+
+Al crear el commit de una release, incluye los manifests revisados, los tres
+conjuntos de preguntas oficiales, `corpus_index.json`, `release.yaml`, el
+validador y sus pruebas. No añadas `data/raw/`, `data/processed/`, informes de
+ejecución, el borrador español ni los índices suplementarios: son entradas
+locales, derivados o material aún no aprobado.
+
 ## Flujo reproducible
 
 | Etapa | Entrada versionada o controlada | Script | Salida |
@@ -53,7 +72,10 @@ uv run python scripts/chunk_documents.py \
 # 5. Huellas e IDs con los que se validan las etiquetas del benchmark.
 uv run python scripts/generate_evaluation_corpus_index.py
 
-# 6. Evaluación oficial elegida. El nombre evita sobrescribir otra corrida.
+# 6. Verifica que el corpus local coincide exactamente con la release.
+uv run python scripts/validate_release.py
+
+# 7. Evaluación oficial elegida. El nombre evita sobrescribir otra corrida.
 uv run python scripts/evaluate_retrieval.py \
   --method planned_bm25 \
   --corpus full_text \
@@ -61,9 +83,7 @@ uv run python scripts/evaluate_retrieval.py \
     data/evaluation/questions.yaml \
     data/evaluation/questions_famaf_teaching_en.yaml \
     data/evaluation/questions_famaf_teaching_es.yaml \
-  --full-text-chunks \
-    data/processed/chunks/chunks.jsonl \
-    data/processed/famaf_teaching_chunks/chunks.jsonl \
+  --full-text-chunks data/processed/chunks/chunks.jsonl \
   --k 7 \
   --output reports/retrieval/planned_bm25_full_text_k7_by_topic_language.json
 ```
@@ -111,7 +131,8 @@ uv run python scripts/chunk_documents.py \
 ```
 
 El resultado queda en `data/processed/ithreex_chunks/`. No lo mezcles con el
-corpus oficial hasta crear y revisar las preguntas y etiquetas correspondientes.
+corpus oficial: una vez que sus documentos entren en el corpus canónico, sus
+IDs deben dejar de pasarse como un segundo archivo de chunks.
 
 ## Controles antes de aceptar un resultado
 

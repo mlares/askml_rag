@@ -3,34 +3,49 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta
-      name="description"
-      content="Respuestas fundamentadas sobre el trabajo e investigación públicos de Marcelo Lares."
-    >
-    <title>AskML RAG</title>
+    <meta name="description" content="AskML is Marcelo Lares’s bilingual assistant for applied AI, machine learning, research, teaching, and selected projects.">
+    <link rel="canonical" href="https://ask.mlares.space/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ask.mlares.space/">
+    <meta property="og:title" content="AskML · Marcelo Lares">
+    <meta property="og:description" content="Bilingual answers about Marcelo Lares’s public work in applied AI, ML, research, and teaching.">
+    <meta name="twitter:card" content="summary">
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"AskML","url":"https://ask.mlares.space/","inLanguage":["en","es"],"about":{"@id":"https://www.mlares.space/#marcelo-lares"}},{"@type":"Person","@id":"https://www.mlares.space/#marcelo-lares","name":"Marcelo Lares","url":"https://www.mlares.space/","sameAs":["https://ar.linkedin.com/in/marcelolares","https://www.researchgate.net/profile/Marcelo-Lares"]}]}
+    </script>
+    <title>AskML · Marcelo Lares</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/app.js" defer></script>
   </head>
   <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-brand" href="https://www.mlares.space/">Marcelo Lares</a>
+        <nav class="site-nav" aria-label="Portfolio navigation">
+          <a href="https://www.mlares.space/">Home</a>
+          <a href="https://www.mlares.space/cv/">CV</a>
+          <a href="https://www.mlares.space/projects/">Projects</a>
+          <a href="https://www.mlares.space/lab/">Lab</a>
+          <a href="https://www.mlares.space/research/">Research</a>
+          <a href="https://www.mlares.space/teaching/">Teaching</a>
+          <a href="https://www.mlares.space/outreach/">Outreach</a>
+          <a href="https://www.mlares.space/blog/">Blog</a>
+          <a href="https://www.mlares.space/contact/">Contact</a>
+          <a href="/book" data-i18n="bookNav">Book a conversation</a>
+        </nav>
+      </div>
+    </header>
     <main class="page-shell">
       <header class="hero">
-        <p class="eyebrow" data-i18n="eyebrow">Asistente de investigación del portfolio</p>
-        <h1>AskML RAG</h1>
-        <p class="intro" data-i18n="intro">
-          Pregunta sobre el trabajo profesional y la investigación públicos de Marcelo Lares.
-          Las respuestas se fundamentan en fuentes recuperadas.
-        </p>
-        <aside class="public-data-disclaimer">
-          <strong data-i18n="disclaimerTitle">Asistente con datos públicos.</strong>
-          <span data-i18n="disclaimerText">Esta herramienta experimental usa un corpus público curado y puede estar incompleto. Verifica las fuentes citadas; no envíes información privada, sensible o confidencial.</span>
-        </aside>
+        <h1 data-i18n="heroHeading">Let’s talk about my work.</h1>
+        <p class="hero-copy" data-i18n="heroCopy">Applied AI leadership, ML delivery, research depth, teaching, and selected projects.</p>
       </header>
-
-      <section class="ask-card" aria-labelledby="ask-heading">
-        <h2 id="ask-heading" data-i18n="askHeading">Haz una pregunta</h2>
-        <form id="ask-form">
+      <div class="question-workspace">
+      <section class="ask-panel" aria-label="Question">
+        <div class="panel-heading">
+          <p class="ask-instruction" data-i18n="askInstruction">Ask naturally about my work; I’ll answer from the available public sources.</p>
           <fieldset class="language-selector">
-            <legend data-i18n="languageLegend">Idioma de la pregunta y la respuesta</legend>
+            <legend class="sr-only" data-i18n="languageLegend">Question and answer language</legend>
             <div class="language-options" role="radiogroup">
               <input id="language-es" name="language" type="radio" value="es" checked>
               <label for="language-es" data-i18n="spanish">Español</label>
@@ -38,63 +53,43 @@
               <label for="language-en" data-i18n="english">English</label>
             </div>
           </fieldset>
-          <label for="question" data-i18n="questionLabel">Pregunta</label>
-          <textarea
-            id="question"
-            name="question"
-            rows="3"
-            maxlength="1000"
-            placeholder="Por ejemplo: ¿Qué investigación hizo Marcelo sobre vacíos cósmicos?"
-            required
-          ></textarea>
+        </div>
+        <form id="ask-form">
+          <label class="sr-only" for="question" data-i18n="questionLabel">Your question</label>
+          <textarea id="question" name="question" rows="3" maxlength="1000" placeholder="For example: Do you have experience with recommendation systems?" required></textarea>
           <div class="form-footer">
-            <p class="hint" data-i18n="formHint">Solo se usan fuentes públicas del corpus.</p>
-            <button id="submit-button" type="submit" data-i18n="askButton">Preguntar</button>
+            <button id="submit-button" type="submit" data-i18n="askButton">Ask</button>
           </div>
         </form>
+        <div class="example-questions" aria-labelledby="examples-heading">
+          <p id="examples-heading" class="examples-label" data-i18n="examplesHeading">Try a question</p>
+          <button id="example-prompts" class="prompt-carousel" type="button"></button>
+        </div>
       </section>
-
-      <section class="about-card" aria-labelledby="about-heading">
-        <h2 id="about-heading" data-i18n="aboutHeading">Acerca de este asistente</h2>
-        <p data-i18n="aboutText">
-          Busca un corpus público curado sobre Marcelo Lares y solo responde cuando las fuentes recuperadas aportan evidencia.
-        </p>
-        <ul>
-          <li data-i18n="aboutItemOne">Abre cada enlace y verifica la evidencia citada.</li>
-          <li data-i18n="aboutItemTwo">“No lo sé” significa que las fuentes disponibles no fueron suficientes.</li>
-          <li data-i18n="aboutItemThree">Las preguntas no se conservan en los registros de solicitudes.</li>
-        </ul>
-        <p class="hint" data-i18n="aboutHint">
-          Para proteger el servicio, las preguntas tienen límites de frecuencia y tiempo. Este es un proyecto experimental de portfolio, no un buscador web general.
-        </p>
-      </section>
-
-      <section id="result" class="result" aria-live="polite" hidden>
+      <section id="result" class="result" aria-live="polite">
         <p id="result-status" class="result-status" hidden></p>
-
+        <div id="empty-state" class="empty-state">
+          <p data-i18n="emptyState">Your answer and supporting evidence will appear here.</p>
+        </div>
         <div id="answer-state" hidden>
-          <h2 data-i18n="answerHeading">Respuesta</h2>
+          <p class="result-kicker" data-i18n="answerKicker">Evidence-backed answer</p>
           <p id="answer-text" class="answer-text"></p>
-          <section aria-labelledby="sources-heading">
-            <h3 id="sources-heading" data-i18n="sourcesHeading">Fuentes</h3>
-            <div id="citations" class="citations"></div>
-          </section>
+          <a class="booking-cta" href="/book" data-i18n="bookCta">Book a conversation</a>
         </div>
-
         <div id="abstention-state" hidden>
-          <h2 data-i18n="abstentionHeading">No lo sé a partir de las fuentes disponibles</h2>
+          <p class="result-kicker" data-i18n="abstentionKicker">A useful next step</p>
+          <h2 data-i18n="abstentionHeading">I can’t verify that from the available sources.</h2>
           <p id="abstention-message"></p>
-          <p class="hint" data-i18n="abstentionHint">
-            Prueba con una pregunta más específica o consulta sobre el trabajo público, proyectos, docencia o publicaciones de Marcelo.
-          </p>
+          <p class="hint" data-i18n="abstentionHint">Try a suggested question, or explore the portfolio and CV directly.</p>
         </div>
-
         <div id="error-state" hidden>
-          <h2 data-i18n="errorHeading">El asistente no está disponible temporalmente</h2>
+          <h2 data-i18n="errorHeading">The assistant is temporarily unavailable</h2>
           <p id="error-message"></p>
-          <p class="hint" data-i18n="errorHint">Por favor, inténtalo de nuevo en unos instantes.</p>
+          <p class="hint" data-i18n="errorHint">Please try again shortly.</p>
         </div>
       </section>
+      </div>
+      <p class="privacy-link"><a href="/privacy" data-i18n="privacyLink">Privacy and data use</a></p>
     </main>
   </body>
 </html>

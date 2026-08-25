@@ -37,6 +37,32 @@ class FakeResponsesAPI:
         )
 
 
+class FlakyResponsesAPI(FakeResponsesAPI):
+    def parse(self, **kwargs: object) -> SimpleNamespace:
+        self.calls.append(kwargs)
+        if len(self.calls) == 1:
+            raise TimeoutError("temporary provider timeout")
+        return SimpleNamespace(
+            output_parsed=OpenAIParsedResponse(
+                answerable=True,
+                answer="Marcelo built reproducible pipelines.",
+                claims=[
+                    {
+                        "text": "Marcelo built reproducible pipelines.",
+                        "citation_ids": ["retrieved_chunk_001"],
+                    }
+                ],
+                citations=[
+                    {
+                        "chunk_id": "retrieved_chunk_001",
+                        "quote": "built reproducible pipelines",
+                    }
+                ],
+                limitations=[],
+            )
+        )
+
+
 def make_request() -> GenerationRequest:
     return GenerationRequest(
         question="What did Marcelo build?",
@@ -70,8 +96,19 @@ def test_openai_provider_sends_prompt_and_pydantic_schema() -> None:
                 {"role": "user", "content": "Only use chunk retrieved_chunk_001."}
             ],
             "text_format": OpenAIParsedResponse,
+            "max_output_tokens": 600,
         }
     ]
+
+
+def test_openai_provider_retries_once_after_a_generation_failure() -> None:
+    responses_api = FlakyResponsesAPI()
+    llm = OpenAIResponsesLLM(client=SimpleNamespace(responses=responses_api))
+
+    answer = llm.generate(make_request())
+
+    assert answer.answerable is True
+    assert len(responses_api.calls) == 2
 
 
 def test_openai_provider_requires_a_key_without_an_injected_client(
@@ -94,4 +131,12 @@ def test_openai_provider_rejects_a_non_positive_timeout() -> None:
         OpenAIResponsesLLM(
             client=SimpleNamespace(responses=FakeResponsesAPI()),
             timeout_seconds=0,
+        )
+
+
+def test_openai_provider_rejects_a_non_positive_output_cap() -> None:
+    with pytest.raises(ValueError, match="max_output_tokens must be greater than zero"):
+        OpenAIResponsesLLM(
+            client=SimpleNamespace(responses=FakeResponsesAPI()),
+            max_output_tokens=0,
         )

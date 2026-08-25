@@ -75,6 +75,8 @@ QUERY_EXPANSIONS = {
         "deep learning pytorch transfer learning neural networks autoencoders "
         "mixture density networks"
     ),
+    "course": "teaching course curriculum syllabus programme professor",
+    "curso": "docencia curso materia programa contenidos profesor",
     "editorial": "editorial committee technical editor journal",
     "gcp": (
         "gcp google cloud platform compute engine cloud storage bigquery"
@@ -87,6 +89,8 @@ QUERY_EXPANSIONS = {
     "python": (
         "python numpy pandas scipy pytorch scientific computing data pipelines"
     ),
+    "research": "research publications papers collaboration coauthors scientific methods",
+    "investigación": "investigación publicaciones artículos colaboración coautores métodos científicos",
     "statistics": "statistics probability hypothesis testing statistical",
     "estadística": "estadística probabilidad pruebas hipótesis estadístico",
     "enseñanza": "enseñanza profesor cursos currículo mentoría docencia",

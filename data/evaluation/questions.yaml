@@ -1586,3 +1586,167 @@ questions:
     expected_claims: []
     difficulty: unanswerable
     notes: La fuente disponible no establece despliegue ni un resultado final para el cliente.
+
+  - question_id: behavioral_challenge_data_driven_es_001
+    topic: professional_profile
+    language: es
+    question: Contame de un proyecto desafiante en el que Marcelo mejoró la forma de tomar decisiones sobre modelos.
+    answerable: true
+    category: ambiguous
+    expected_document_ids: [behavioral_stories_es]
+    relevant_chunk_ids:
+      - behavioral_stories_es_chunk_000
+      - behavioral_stories_es_chunk_001
+      - behavioral_stories_es_chunk_002
+    expected_claims:
+      - claim: Marcelo mejoró la confiabilidad de la evidencia para decidir qué modelos de recomendación llegaban a producción mediante mejoras de evaluación, señales de comportamiento y un protocolo de validación preproducción.
+        source_document_ids: [behavioral_stories_es]
+    difficulty: ambiguous
+
+  - question_id: behavioral_btr_outcome_es_001
+    topic: professional_profile
+    language: es
+    question: ¿Qué impacto obtuvo el protocolo de validación de modelos de recomendación?
+    answerable: true
+    category: quantitative
+    expected_document_ids: [behavioral_stories_es]
+    relevant_chunk_ids:
+      - behavioral_stories_es_chunk_001
+      - behavioral_stories_es_chunk_002
+    expected_claims:
+      - claim: Aproximadamente la mitad de los modelos que superaban el proceso lograron mejoras de alrededor de 1% a 2% en BTR durante A/B tests online.
+        source_document_ids: [behavioral_stories_es]
+    difficulty: direct
+
+  - question_id: behavioral_rag_client_es_001
+    topic: professional_profile
+    language: es
+    question: ¿Cómo recuperó Marcelo la confianza de un cliente insatisfecho con un chatbot RAG?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [behavioral_stories_es]
+    relevant_chunk_ids:
+      - behavioral_stories_es_chunk_003
+      - behavioral_stories_es_chunk_004
+    expected_claims:
+      - claim: Marcelo explicó en lenguaje claro la dependencia entre la calidad de RAG y la base de conocimiento, y acordó con el cliente auditar, limpiar y reorganizar la documentación técnica.
+        source_document_ids: [behavioral_stories_es]
+      - claim: Dos semanas después de incorporar documentación mejorada, el desempeño y la precisión del sistema mejoraron significativamente.
+        source_document_ids: [behavioral_stories_es]
+    difficulty: direct
+
+  - question_id: behavioral_competitive_ambiguity_es_001
+    topic: professional_profile
+    language: es
+    question: ¿Cómo respondió Marcelo a una amenaza competitiva con información incompleta en una categoría de e-commerce?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [behavioral_stories_es]
+    relevant_chunk_ids:
+      - behavioral_stories_es_chunk_005
+      - behavioral_stories_es_chunk_006
+    expected_claims:
+      - claim: Marcelo combinó síntesis de conocimiento con LLMs y datos de comportamiento de usuarios, y construyó una pipeline ETL reproducible y trazable para generar datasets y features específicos de la categoría.
+        source_document_ids: [behavioral_stories_es]
+      - claim: El modelo final no llegó a producción por un cambio de prioridades, pero quedó una infraestructura reutilizable preparada para acelerar un futuro despliegue.
+        source_document_ids: [behavioral_stories_es]
+    difficulty: direct
+
+  - question_id: behavioral_startup_ownership_es_001
+    topic: professional_profile
+    language: es
+    question: Dame un ejemplo de cómo Marcelo tomó ownership más allá de su rol técnico en una startup.
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [behavioral_stories_es]
+    relevant_chunk_ids:
+      - behavioral_stories_es_chunk_007
+      - behavioral_stories_es_chunk_008
+    expected_claims:
+      - claim: En dos semanas Marcelo centralizó el conocimiento, formalizó la comunicación y el seguimiento, organizó responsabilidades y co-diseñó un proceso de onboarding con HR.
+        source_document_ids: [behavioral_stories_es]
+      - claim: La startup pasó a operar con una estructura más orientada por hitos, con menos fricción de versionado y una mejor base para coordinar al equipo y preparar conversaciones con inversores.
+        source_document_ids: [behavioral_stories_es]
+    difficulty: direct
+
+  - question_id: behavioral_challenge_data_driven_en_001
+    topic: professional_profile
+    language: en
+    question: Tell me about a challenging project where Marcelo improved how model decisions were made.
+    answerable: true
+    category: ambiguous
+    expected_document_ids: [behavioral_stories_en]
+    relevant_chunk_ids:
+      - behavioral_stories_en_chunk_000
+      - behavioral_stories_en_chunk_001
+      - behavioral_stories_en_chunk_002
+    expected_claims:
+      - claim: Marcelo improved the reliability of evidence for deciding which recommendation models reached production through evaluation improvements, behavioral signals, and a pre-production validation protocol.
+        source_document_ids: [behavioral_stories_en]
+    difficulty: ambiguous
+
+  - question_id: behavioral_btr_outcome_en_001
+    topic: professional_profile
+    language: en
+    question: What impact did the recommendation-model validation protocol achieve?
+    answerable: true
+    category: quantitative
+    expected_document_ids: [behavioral_stories_en]
+    relevant_chunk_ids:
+      - behavioral_stories_en_chunk_001
+      - behavioral_stories_en_chunk_002
+    expected_claims:
+      - claim: About half of the models that passed the process achieved online BTR improvements of around 1% to 2% during A/B tests.
+        source_document_ids: [behavioral_stories_en]
+    difficulty: direct
+
+  - question_id: behavioral_rag_client_en_001
+    topic: professional_profile
+    language: en
+    question: How did Marcelo rebuild an unhappy client's trust in a RAG chatbot?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [behavioral_stories_en]
+    relevant_chunk_ids:
+      - behavioral_stories_en_chunk_003
+      - behavioral_stories_en_chunk_004
+    expected_claims:
+      - claim: Marcelo explained in plain language the dependency between RAG quality and the knowledge base, then agreed with the client to audit, clean, and reorganize the technical documentation.
+        source_document_ids: [behavioral_stories_en]
+      - claim: Two weeks after incorporating improved documentation, the system's performance and accuracy improved significantly.
+        source_document_ids: [behavioral_stories_en]
+    difficulty: direct
+
+  - question_id: behavioral_competitive_ambiguity_en_001
+    topic: professional_profile
+    language: en
+    question: How did Marcelo respond to a competitive threat with incomplete information in an e-commerce category?
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [behavioral_stories_en]
+    relevant_chunk_ids:
+      - behavioral_stories_en_chunk_005
+      - behavioral_stories_en_chunk_006
+    expected_claims:
+      - claim: Marcelo combined LLM-based knowledge synthesis with user-behavior data and built a reproducible, traceable ETL pipeline to create category-specific datasets and features.
+        source_document_ids: [behavioral_stories_en]
+      - claim: The final model did not reach production because priorities changed, but the team retained reusable infrastructure prepared to accelerate a future deployment.
+        source_document_ids: [behavioral_stories_en]
+    difficulty: direct
+
+  - question_id: behavioral_startup_ownership_en_001
+    topic: professional_profile
+    language: en
+    question: Give an example of Marcelo taking ownership beyond his technical role at a startup.
+    answerable: true
+    category: direct_fact
+    expected_document_ids: [behavioral_stories_en]
+    relevant_chunk_ids:
+      - behavioral_stories_en_chunk_007
+      - behavioral_stories_en_chunk_008
+    expected_claims:
+      - claim: Within two weeks Marcelo centralized knowledge, formalized communication and tracking, organized responsibilities, and co-designed structured onboarding with HR.
+        source_document_ids: [behavioral_stories_en]
+      - claim: The startup became more milestone-driven, with less file-versioning friction and a stronger foundation for coordinating the team and preparing investor conversations.
+        source_document_ids: [behavioral_stories_en]
+    difficulty: direct

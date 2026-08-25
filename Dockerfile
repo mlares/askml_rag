@@ -36,4 +36,4 @@ EXPOSE 8080
 
 # Cloud Run injects PORT at runtime. Use one process initially because the
 # application keeps its language-specific retrieval indexes in process memory.
-CMD ["/bin/sh", "-c", "uvicorn askml_rag.api:create_app --factory --host 0.0.0.0 --port ${PORT:-8080}"]
+CMD ["/bin/sh", "-c", "exec uvicorn askml_rag.api:create_app --factory --host 0.0.0.0 --port ${PORT:-8080}"]

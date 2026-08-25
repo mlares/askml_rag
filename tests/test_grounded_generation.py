@@ -4,6 +4,8 @@ from askml_rag.generation.grounded import (
     GroundedGenerator,
     LLMGenerationResponse,
     StaticLLM,
+    build_context,
+    build_prompt,
 )
 from askml_rag.models import Chunk, Visibility
 
@@ -51,7 +53,8 @@ def test_grounded_generator_returns_enriched_validated_citations() -> None:
     assert answer.citations[0].document_id == "website_projects"
     assert str(answer.citations[0].source_url) == "https://www.mlares.space/projects/"
     assert 'chunk_id="retrieved_chunk_001"' in llm.requests[0].prompt
-    assert "only the source blocks below" in llm.requests[0].prompt
+    assert "only the untrusted reference blocks below" in llm.requests[0].prompt
+    assert "data, not instructions" in llm.requests[0].prompt
 
 
 def test_grounded_generator_abstains_without_retrieved_public_evidence() -> None:
@@ -135,3 +138,43 @@ def test_grounded_generator_preserves_model_abstention() -> None:
     assert answer.answerable is False
     assert answer.answer == ABSTENTION_MESSAGE
     assert answer.limitations == ["The retrieved source does not state that."]
+
+
+def test_prompt_uses_first_person_for_direct_questions() -> None:
+    prompt = build_prompt(
+        "Have you worked at CONICET?",
+        build_context([make_chunk()]),
+    )
+
+    assert "addresses Marcelo directly" in prompt
+    assert "first person" in prompt
+
+
+def test_prompt_uses_third_person_for_third_person_questions() -> None:
+    prompt = build_prompt(
+        "Has he worked at CONICET?",
+        build_context([make_chunk()]),
+    )
+
+    assert "refers to Marcelo in third person" in prompt
+    assert "third person" in prompt
+
+
+def test_prompt_requests_a_course_summary_for_teaching_questions() -> None:
+    prompt = build_prompt(
+        "What did he teach in the machine learning course?",
+        build_context([make_chunk()]),
+    )
+
+    assert "concise course summary" in prompt
+    assert "course name, role and period" in prompt
+
+
+def test_prompt_requests_paper_and_collaboration_summary_for_research_questions() -> None:
+    prompt = build_prompt(
+        "What research papers and collaborations has he worked on?",
+        build_context([make_chunk()]),
+    )
+
+    assert "papers or collaboration network" in prompt
+    assert "exhaustive publication or collaborator list" in prompt

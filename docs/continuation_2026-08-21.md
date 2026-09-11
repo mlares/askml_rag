@@ -13,7 +13,7 @@ The AskML application has been prepared for a public beta:
   the visitor UI);
 - bounded requests: 1,000-character question limit, JSON-only requests, 4 KiB
   body cap, request IDs, local per-IP rate limiting, provider and application
-  timeouts, and a 600-token output cap;
+  timeouts, a 1,200-token initial output cap, and one retry with a doubled cap;
 - prompt-injection boundary: retrieved text is explicitly untrusted reference
   material and cannot override the answer rules;
 - `GET /health`, `GET /ready`, `GET /privacy`, and `GET /book` endpoints;
@@ -39,13 +39,14 @@ warning).
 ```text
 Project: askml-505521
 Service account: askml-runner@askml-505521.iam.gserviceaccount.com
-Image: southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml@sha256:727e6f16a3515b5b0371030b45f2ad618ce70d4867664c280b8ad1896a64fee8
+Image: southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml@sha256:9bc5c36882a94a8209813105065e15ea5ad4383287f86bf7f89063c6aa275f1d
 Calendly: https://calendly.com/marcelo-lares/30min
 Region: southamerica-east1
+Revision: askml-00007-9zn
 ```
 
-The image was built locally, tagged as `v3`, pushed to Artifact Registry, and
-referenced by its immutable digest. A digest freezes the exact code,
+The image was built with Cloud Build, tagged as `v7-rag-retrieval`, pushed to
+Artifact Registry, and referenced by its immutable digest. A digest freezes the exact code,
 dependencies, static UI, and reviewed corpus included in that build. Do not
 rebuild merely to deploy it.
 

@@ -36,21 +36,48 @@ STATIC_DIRECTORY = Path(__file__).parent / "static"
 DEFAULT_BOOKING_URL = "https://www.mlares.space/contact/"
 LOGGER = logging.getLogger("askml_rag.api")
 GENERATION_FALLBACK_MESSAGES = {
-    Language.english: "The source documents do not include information related to this question.",
-    Language.spanish: "Los documentos fuente no incluyen información relacionada con esta pregunta.",
+    Language.english: "The answer could not be generated or validated. Please try again.",
+    Language.spanish: "No se pudo generar o validar la respuesta. Por favor, intentá nuevamente.",
 }
 
 SPANISH_LANGUAGE_SIGNALS = frozenset(
     {
-        "qué", "cómo", "cuál", "cuáles", "tenés", "tienes", "trabajaste",
-        "investigación", "docencia", "materia", "curso", "podés", "puedes",
-        "sobre", "con", "para",
+        "qué",
+        "cómo",
+        "cuál",
+        "cuáles",
+        "tenés",
+        "tienes",
+        "trabajaste",
+        "investigación",
+        "docencia",
+        "materia",
+        "curso",
+        "podés",
+        "puedes",
+        "sobre",
+        "con",
+        "para",
     }
 )
 ENGLISH_LANGUAGE_SIGNALS = frozenset(
     {
-        "what", "which", "how", "have", "has", "you", "your", "worked",
-        "research", "teaching", "course", "about", "with", "for", "does", "do",
+        "what",
+        "which",
+        "how",
+        "have",
+        "has",
+        "you",
+        "your",
+        "worked",
+        "research",
+        "teaching",
+        "course",
+        "about",
+        "with",
+        "for",
+        "does",
+        "do",
     }
 )
 
@@ -245,14 +272,20 @@ def create_app(
         if request.url.path == "/ask":
             content_length = request.headers.get("content-length")
             try:
-                body_is_too_large = bool(content_length) and int(content_length) > resolved_settings.max_request_bytes
+                body_is_too_large = (
+                    bool(content_length)
+                    and int(content_length) > resolved_settings.max_request_bytes
+                )
             except ValueError:
                 body_is_too_large = True
             if body_is_too_large:
                 response = JSONResponse(
                     status_code=413, content={"detail": "Request body is too large."}
                 )
-            elif request.headers.get("content-type", "").split(";", 1)[0] != "application/json":
+            elif (
+                request.headers.get("content-type", "").split(";", 1)[0]
+                != "application/json"
+            ):
                 response = JSONResponse(
                     status_code=415,
                     content={"detail": "POST /ask requires application/json."},
@@ -263,7 +296,9 @@ def create_app(
                 if not allowed:
                     response = JSONResponse(
                         status_code=429,
-                        content={"detail": "Too many requests. Please try again later."},
+                        content={
+                            "detail": "Too many requests. Please try again later."
+                        },
                         headers={"Retry-After": str(retry_after)},
                     )
                 else:

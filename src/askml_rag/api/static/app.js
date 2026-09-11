@@ -147,7 +147,9 @@ form.addEventListener("submit", async (event) => {
     const response = await fetch("/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question: questionText, language: selectedLanguage() }) });
     if (!response.ok) throw new Error(textFor("serverReturned").replace("{status}", response.status));
     const payload = await response.json(); resultStatus.hidden = true;
-    if (payload.answerable) showAnswer(payload); else showAbstention(payload);
+    if (payload.answerable) showAnswer(payload);
+    else if (payload.model_version === "generation-unavailable") showError(payload.limitations?.[0] || textFor("requestFailed"));
+    else showAbstention(payload);
   } catch (error) {
     resultStatus.hidden = true; showError(error instanceof Error ? error.message : textFor("requestFailed"));
   } finally {

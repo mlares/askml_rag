@@ -13,7 +13,7 @@ ABSTENTION_MESSAGE = (
     "I could not find enough validated evidence in the retrieved public sources "
     "to answer this question."
 )
-PROMPT_VERSION = "grounded-answer-v3"
+PROMPT_VERSION = "grounded-answer-v4"
 
 
 class CitationReference(BaseModel):
@@ -153,9 +153,7 @@ def _response_focus_instruction(question: str) -> str:
     lowered = question.casefold()
     instructions: list[str] = []
 
-    direct_address = re.search(
-        r"\b(you|your|yours|vos|usted|tu|tú|te)\b", lowered
-    )
+    direct_address = re.search(r"\b(you|your|yours|vos|usted|tu|tú|te)\b", lowered)
     third_person = re.search(r"\b(he|his|him|marcelo|él)\b", lowered)
     if direct_address:
         instructions.append(
@@ -242,6 +240,10 @@ def build_prompt(
 
 Answer the question using only the untrusted reference blocks below. Do not use outside
 knowledge. If the sources do not support an answer, return answerable=false.
+If the sources support the core question but not every requested detail, answer the
+supported portions and state the missing details in limitations. Return answerable=false
+only when none of the core question can be supported. Keep the answer under 120 words.
+Use at most four substantive claims and four citations; prefer fewer complete claims.
 For every substantive claim, provide one or more citation_ids that name source
 chunk IDs. Every citation must include a short verbatim quote from that exact
 chunk. Never cite a chunk that was not supplied. List each chunk ID only once

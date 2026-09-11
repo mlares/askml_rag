@@ -15,7 +15,7 @@ spec:
       timeoutSeconds: 30
       serviceAccountName: askml-runner@askml-505521.iam.gserviceaccount.com
       containers:
-        - image: southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml@sha256:124bbcf1630c1e4d17ffb0f8c0f8abf5e689535ed07637b44fd33520440f9919
+        - image: southamerica-east1-docker.pkg.dev/askml-505521/askml-images/askml@sha256:9bc5c36882a94a8209813105065e15ea5ad4383287f86bf7f89063c6aa275f1d
           ports:
             - name: http1
               containerPort: 8080

@@ -17,7 +17,7 @@ from askml_rag.generation.grounded import (
 # DEFAULT_MODEL = "gpt-5.4-nano"
 DEFAULT_MODEL = "gpt-5.6-luna"
 DEFAULT_TIMEOUT_SECONDS = 20.0
-DEFAULT_MAX_OUTPUT_TOKENS = 600
+DEFAULT_MAX_OUTPUT_TOKENS = 1_200
 MAX_GENERATION_ATTEMPTS = 2
 
 
@@ -78,7 +78,9 @@ class OpenAIResponsesLLM:
                     model=self.model_version,
                     input=[{"role": "user", "content": request.prompt}],
                     text_format=OpenAIParsedResponse,
-                    max_output_tokens=self.max_output_tokens,
+                    max_output_tokens=self.max_output_tokens * (attempt + 1),
+                    reasoning={"effort": "low"},
+                    text={"verbosity": "low"},
                 )
                 parsed = response.output_parsed
                 if parsed is None:

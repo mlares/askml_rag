@@ -96,7 +96,9 @@ def test_openai_provider_sends_prompt_and_pydantic_schema() -> None:
                 {"role": "user", "content": "Only use chunk retrieved_chunk_001."}
             ],
             "text_format": OpenAIParsedResponse,
-            "max_output_tokens": 600,
+            "max_output_tokens": 1_200,
+            "reasoning": {"effort": "low"},
+            "text": {"verbosity": "low"},
         }
     ]
 
@@ -109,6 +111,8 @@ def test_openai_provider_retries_once_after_a_generation_failure() -> None:
 
     assert answer.answerable is True
     assert len(responses_api.calls) == 2
+    assert responses_api.calls[0]["max_output_tokens"] == 1_200
+    assert responses_api.calls[1]["max_output_tokens"] == 2_400
 
 
 def test_openai_provider_requires_a_key_without_an_injected_client(

@@ -83,17 +83,23 @@ def test_grounded_generator_abstains_when_citation_was_not_retrieved() -> None:
     response.citations[0].chunk_id = "invented_chunk_999"
     response.claims[0].citation_ids = ["invented_chunk_999"]
 
-    answer = GroundedGenerator(StaticLLM(response)).answer("What did Marcelo build?", [make_chunk()])
+    answer = GroundedGenerator(StaticLLM(response)).answer(
+        "What did Marcelo build?", [make_chunk()]
+    )
 
     assert answer.answerable is False
     assert "was not retrieved" in answer.validation_errors[0]
 
 
-def test_grounded_generator_replaces_a_paraphrased_model_quote_with_source_text() -> None:
+def test_grounded_generator_replaces_a_paraphrased_model_quote_with_source_text() -> (
+    None
+):
     response = supported_response()
     response.citations[0].quote = "Marcelo deployed a Kubernetes cluster"
 
-    answer = GroundedGenerator(StaticLLM(response)).answer("What did Marcelo build?", [make_chunk()])
+    answer = GroundedGenerator(StaticLLM(response)).answer(
+        "What did Marcelo build?", [make_chunk()]
+    )
 
     assert answer.answerable is True
     assert answer.citations[0].quote == (
@@ -170,7 +176,9 @@ def test_prompt_requests_a_course_summary_for_teaching_questions() -> None:
     assert "course name, role and period" in prompt
 
 
-def test_prompt_requests_paper_and_collaboration_summary_for_research_questions() -> None:
+def test_prompt_requests_paper_and_collaboration_summary_for_research_questions() -> (
+    None
+):
     prompt = build_prompt(
         "What research papers and collaborations has he worked on?",
         build_context([make_chunk()]),
@@ -178,3 +186,14 @@ def test_prompt_requests_paper_and_collaboration_summary_for_research_questions(
 
     assert "papers or collaboration network" in prompt
     assert "exhaustive publication or collaborator list" in prompt
+
+
+def test_prompt_limits_output_and_allows_partially_supported_answers() -> None:
+    prompt = build_prompt(
+        "Tell me about your work and every result.",
+        build_context([make_chunk()]),
+    )
+
+    assert "core question but not every requested detail" in prompt
+    assert "under 120 words" in prompt
+    assert "at most four substantive claims and four citations" in prompt

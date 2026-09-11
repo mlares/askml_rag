@@ -19,9 +19,9 @@ the beta:
 
 The application’s 10/minute per-process limit, 4 KiB body cap, 1,000-character
 question cap, 25-second request deadline, 20-second provider deadline, and
-600-token output cap are a second layer. They are deliberately not a substitute
-for Cloud Armor or a distributed quota. For higher traffic, use a shared
-counter (for example, Redis) for the per-IP/day budget.
+1,200-token initial output cap are a second layer. They are deliberately not a
+substitute for Cloud Armor or a distributed quota. For higher traffic, use a
+shared counter (for example, Redis) for the per-IP/day budget.
 
 ## Deploy a pinned revision
 
@@ -90,11 +90,12 @@ incur a model call.
 ## Transient generation failures
 
 The generation provider makes one additional attempt after a transient failure.
-If generation still fails, the API returns an answerable-but-empty result with
-an appropriate localized limitation instead of surfacing a `502` page:
+If generation still fails, the API returns a non-answerable result with
+an appropriate localized generation error instead of falsely reporting a lack
+of retrieved evidence:
 
-- English: `The source documents do not include information related to this question.`
-- Spanish: `Los documentos fuente no incluyen información relacionada con esta pregunta.`
+- English: `The answer could not be generated or validated. Please try again.`
+- Spanish: `No se pudo generar o validar la respuesta. Por favor, intentá nuevamente.`
 
 This response must not be interpreted as evidence that retrieval found no
 documents; it is the safe user-facing fallback once generation cannot complete.

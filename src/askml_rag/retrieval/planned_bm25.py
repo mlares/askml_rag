@@ -8,7 +8,6 @@ from collections.abc import Sequence
 from askml_rag.models import Chunk, RetrievalFilters
 from askml_rag.retrieval.bm25 import BM25Retriever, tokenize
 
-
 BOILERPLATE_TOKENS = {
     "a",
     "an",
@@ -44,7 +43,10 @@ BOILERPLATE_TOKENS = {
     "with",
     "cuál",
     "cuáles",
+    "cual",
+    "cuales",
     "cómo",
+    "como",
     "documentado",
     "documentados",
     "documentada",
@@ -55,6 +57,10 @@ BOILERPLATE_TOKENS = {
     "la",
     "las",
     "los",
+    "lo",
+    "que",
+    "quien",
+    "quienes",
     "qué",
     "público",
     "tiene",
@@ -68,8 +74,7 @@ QUERY_EXPANSIONS = {
         "autoencoders densidad mixta"
     ),
     "comercio internacional": (
-        "comercio internacional exportación oportunidad procordoba producto "
-        "código hs"
+        "comercio internacional exportación oportunidad procordoba producto código hs"
     ),
     "deep learning": (
         "deep learning pytorch transfer learning neural networks autoencoders "
@@ -78,17 +83,13 @@ QUERY_EXPANSIONS = {
     "course": "teaching course curriculum syllabus programme professor",
     "curso": "docencia curso materia programa contenidos profesor",
     "editorial": "editorial committee technical editor journal",
-    "gcp": (
-        "gcp google cloud platform compute engine cloud storage bigquery"
-    ),
+    "gcp": ("gcp google cloud platform compute engine cloud storage bigquery"),
     "international trade": (
         "international trade export opportunity procordoba commodity hs code"
     ),
     "leadership": "leadership lead owner mentoring technical leadership team",
     "liderazgo": "liderazgo líder responsable mentoría equipo técnico",
-    "python": (
-        "python numpy pandas scipy pytorch scientific computing data pipelines"
-    ),
+    "python": ("python numpy pandas scipy pytorch scientific computing data pipelines"),
     "research": "research publications papers collaboration coauthors scientific methods",
     "investigación": "investigación publicaciones artículos colaboración coautores métodos científicos",
     "statistics": "statistics probability hypothesis testing statistical",
@@ -100,6 +101,70 @@ QUERY_EXPANSIONS = {
     "time-series": "time series forecasting temporal modeling",
     "series temporales": "series temporales pronóstico modelado temporal",
 }
+
+PRODUCT_TOKENS = frozenset(
+    {
+        "product",
+        "products",
+        "producto",
+        "productos",
+        "platform",
+        "platforms",
+        "plataforma",
+        "plataformas",
+    }
+)
+AUDIENCE_CUES = (
+    "customer",
+    "client",
+    "user",
+    "cliente",
+    "usuario",
+    "quien lo usa",
+    "quienes lo usan",
+    "usan",
+)
+CONTRIBUTION_CUES = (
+    "contribution",
+    "contributed",
+    "your role",
+    "aporte",
+    "aportaste",
+    "contribución",
+    "contribuiste",
+    "rol",
+)
+RECENCY_CUES = (
+    "latest",
+    "last one",
+    "most recent",
+    "current",
+    "último",
+    "ultimo",
+    "más reciente",
+    "mas reciente",
+    "actual",
+)
+PROFILE_CUES = (
+    "tell me about yourself",
+    "tell me about you",
+    "about yourself",
+    "contame sobre vos",
+    "cuéntame sobre ti",
+    "quién sos",
+    "quien sos",
+    "quién eres",
+    "quien eres",
+)
+THESIS_ADVISOR_CUES = (
+    "who supervised your thesis",
+    "who directed your thesis",
+    "who was your thesis director",
+    "quién dirigió tu tesis",
+    "quien dirigio tu tesis",
+    "director de tu tesis",
+    "directora de tu tesis",
+)
 
 FAMAF_CUES = (
     "clases prácticas",
@@ -175,6 +240,13 @@ EXPANSION_CUES = (
     "entre",
     "primero",
     "secuencia",
+    "latest",
+    "last one",
+    "most recent",
+    "último",
+    "ultimo",
+    "más reciente",
+    "mas reciente",
 )
 
 
@@ -188,17 +260,53 @@ def rewrite_query(query: str) -> str:
     ]
     rewritten = " ".join(meaningful)
     expansions = [
-        expansion
-        for cue, expansion in QUERY_EXPANSIONS.items()
-        if cue in lowered
+        expansion for cue, expansion in QUERY_EXPANSIONS.items() if cue in lowered
     ]
     return " ".join([rewritten, *expansions]).strip()
+
+
+def _is_product_question(query: str) -> bool:
+    """Recognize product intent without confusing `product` with `production`."""
+    return bool(set(tokenize(query)) & PRODUCT_TOKENS)
+
+
+def _is_professional_product_question(query: str) -> bool:
+    """Recognize product questions that ask about Marcelo's professional work."""
+    lowered = query.lower()
+    if not _is_product_question(lowered):
+        return False
+    work_cues = (
+        "worked",
+        "work on",
+        "built",
+        "developed",
+        "trabajado",
+        "trabajaste",
+        "trabajó",
+        "construí",
+        "construido",
+        "desarrollé",
+        "desarrollado",
+    )
+    return any(
+        cue in lowered
+        for cue in (
+            *work_cues,
+            *AUDIENCE_CUES,
+            *CONTRIBUTION_CUES,
+            *RECENCY_CUES,
+        )
+    )
+
+
+def _contains_any(query: str, cues: Sequence[str]) -> bool:
+    return any(cue in query.lower() for cue in cues)
 
 
 def decompose_query(query: str) -> list[str]:
     """Produce bounded subqueries for common multi-part question forms."""
     lowered = query.lower()
-    subqueries = []
+    subqueries: list[str] = []
     if "mentoring" in lowered and "evaluation" in lowered:
         subqueries.extend(
             (
@@ -206,7 +314,62 @@ def decompose_query(query: str) -> list[str]:
                 "formal evaluation reviewer committee conicet",
             )
         )
-    return [subquery.strip(" ?. ,") for subquery in subqueries if subquery.strip()]
+
+    if _contains_any(lowered, PROFILE_CUES):
+        subqueries.extend(
+            (
+                "perfil profesional experiencia habilidades trayectoria",
+                "biografía trabajo investigación docencia liderazgo",
+            )
+        )
+
+    if _contains_any(lowered, THESIS_ADVISOR_CUES):
+        subqueries.append(
+            "doctorado astronomía tesis director Diego García Lambas formación académica"
+        )
+
+    product_question = _is_professional_product_question(lowered)
+    audience_question = any(cue in lowered for cue in AUDIENCE_CUES)
+    contribution_question = any(cue in lowered for cue in CONTRIBUTION_CUES)
+    recency_question = any(cue in lowered for cue in RECENCY_CUES)
+    spanish_question = any(
+        cue in lowered
+        for cue in (
+            "producto",
+            "plataforma",
+            "cliente",
+            "usuario",
+            "aporte",
+            "contribución",
+            "último",
+            "ultimo",
+        )
+    )
+    if product_question:
+        subqueries.append(
+            "productos proyectos profesionales software plataforma modelos"
+            if spanish_question
+            else "professional products projects software platform models"
+        )
+        if audience_question:
+            subqueries.append(
+                "usuarios clientes equipos escala producción"
+                if spanish_question
+                else "users customers clients teams scale production"
+            )
+        if contribution_question:
+            subqueries.append(
+                "aporte contribución rol desarrollé lideré construí entregué"
+                if spanish_question
+                else "contribution role developed led built delivered"
+            )
+        if recency_question:
+            subqueries.append(
+                "último reciente actual presente período"
+                if spanish_question
+                else "latest recent current present period"
+            )
+    return list(dict.fromkeys(subqueries))
 
 
 class PlannedBM25Retriever:
@@ -249,7 +412,14 @@ class PlannedBM25Retriever:
         lowered = query.lower()
         is_professional = False
 
-        if any(cue in lowered for cue in FAMAF_CUES):
+        if _contains_any(lowered, THESIS_ADVISOR_CUES):
+            prefixes = ("website_teaching", "cv_education")
+            exact_ids = ()
+        elif _contains_any(lowered, PROFILE_CUES):
+            is_professional = True
+            prefixes = ("website_home", "cv_expertise", "personal_traits")
+            exact_ids = ("skills", "skills_es")
+        elif any(cue in lowered for cue in FAMAF_CUES):
             prefixes = ("famaf_",)
             exact_ids: tuple[str, ...] = ()
         elif any(cue in lowered for cue in ITHREEX_CUES):
@@ -258,10 +428,16 @@ class PlannedBM25Retriever:
         elif any(cue in lowered for cue in CROSS_SOURCE_CUES):
             prefixes = ("website_", "cv_")
             exact_ids = ("skills",)
-        elif any(cue in lowered for cue in PROFESSIONAL_CUES):
+        elif _is_professional_product_question(lowered) or any(
+            cue in lowered for cue in PROFESSIONAL_CUES
+        ):
             is_professional = True
-            prefixes = ("website_", "cv_", "personal_traits")
-            exact_ids = ("skills",)
+            if _is_professional_product_question(lowered):
+                prefixes = ("website_home", "website_projects", "ithreex_")
+                exact_ids = ()
+            else:
+                prefixes = ("website_", "cv_", "personal_traits")
+                exact_ids = ("skills",)
         else:
             return [], False
 
@@ -275,16 +451,17 @@ class PlannedBM25Retriever:
     def _merge_filters(
         filters: RetrievalFilters | None,
         scoped_document_ids: Sequence[str],
-    ) -> RetrievalFilters:
+    ) -> RetrievalFilters | None:
         active = filters or RetrievalFilters()
         if not scoped_document_ids:
             return active
         scoped = set(scoped_document_ids)
-        document_ids = (
-            [item for item in active.document_ids if item in scoped]
-            if active.document_ids
-            else list(scoped_document_ids)
-        )
+        if active.document_ids:
+            document_ids = [item for item in active.document_ids if item in scoped]
+            if not document_ids:
+                return None
+        else:
+            document_ids = list(scoped_document_ids)
         return active.model_copy(update={"document_ids": document_ids})
 
     def _fused_candidates(
@@ -337,9 +514,7 @@ class PlannedBM25Retriever:
                     if neighbor.chunk_id not in expanded_ids:
                         expanded_ids.append(neighbor.chunk_id)
         expanded_ids.extend(
-            chunk.chunk_id
-            for chunk in candidates
-            if chunk.chunk_id not in expanded_ids
+            chunk.chunk_id for chunk in candidates if chunk.chunk_id not in expanded_ids
         )
         return [chunks_by_id[chunk_id] for chunk_id in expanded_ids]
 
@@ -370,6 +545,8 @@ class PlannedBM25Retriever:
             raise ValueError("limit must be greater than zero.")
         scoped_document_ids, is_professional = self._scope_document_ids(query)
         active_filters = self._merge_filters(filters, scoped_document_ids)
+        if active_filters is None:
+            return []
         lowered = query.lower()
         if any(cue in lowered for cue in FAMAF_CUES):
             candidates = self._retriever_for(active_filters).search(
@@ -383,8 +560,11 @@ class PlannedBM25Retriever:
                 query,
                 active_filters,
             )
-        if any(cue in lowered for cue in EXPANSION_CUES):
+        expands_neighbors = any(cue in lowered for cue in EXPANSION_CUES)
+        if expands_neighbors:
             candidates = self._expand_neighbors(candidates, chunks_by_id)
-        elif is_professional:
+        if is_professional and (
+            not expands_neighbors or _is_professional_product_question(lowered)
+        ):
             candidates = self._diversify(candidates, maximum_per_document=2)
         return list(candidates[:limit])

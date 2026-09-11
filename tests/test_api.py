@@ -9,7 +9,11 @@ from askml_rag.api.app import (
     create_app,
     detect_question_language,
 )
-from askml_rag.generation.grounded import GroundedGenerator, LLMGenerationResponse, StaticLLM
+from askml_rag.generation.grounded import (
+    GroundedGenerator,
+    LLMGenerationResponse,
+    StaticLLM,
+)
 from askml_rag.models import Chunk, Language
 from askml_rag.retrieval.bm25 import BM25Retriever
 
@@ -63,8 +67,12 @@ def make_client(settings: OperationalSettings | None = None) -> TestClient:
         BM25Retriever(
             [
                 make_chunk(),
-                make_decoy_chunk("teaching_chunk_001", "This source describes teaching."),
-                make_decoy_chunk("biography_chunk_001", "This source contains a biography."),
+                make_decoy_chunk(
+                    "teaching_chunk_001", "This source describes teaching."
+                ),
+                make_decoy_chunk(
+                    "biography_chunk_001", "This source contains a biography."
+                ),
             ]
         ),
         GroundedGenerator(llm),
@@ -127,11 +135,12 @@ def test_get_static_javascript_serves_the_api_client() -> None:
     response = make_client().get("/static/app.js")
 
     assert response.status_code == 200
-    assert "fetch(\"/ask\"" in response.text
+    assert 'fetch("/ask"' in response.text
     assert "language: selectedLanguage()" in response.text
     assert "applyInterfaceLanguage" in response.text
     assert "renderPrompts" in response.text
     assert "emptyState.hidden = true" in response.text
+    assert 'payload.model_version === "generation-unavailable"' in response.text
 
 
 def test_static_styles_keep_hidden_empty_state_invisible() -> None:
@@ -164,10 +173,13 @@ def test_post_ask_rejects_non_json_and_oversized_bodies() -> None:
     client = make_client(OperationalSettings(max_request_bytes=40))
 
     assert client.post("/ask", content="question=hello").status_code == 415
-    assert client.post(
-        "/ask",
-        json={"question": "a" * 100},
-    ).status_code == 413
+    assert (
+        client.post(
+            "/ask",
+            json={"question": "a" * 100},
+        ).status_code
+        == 413
+    )
 
 
 def test_post_ask_filters_to_the_requested_language() -> None:
@@ -199,7 +211,9 @@ def test_post_ask_rate_limits_one_client() -> None:
             request_timeout_seconds=1,
         )
     )
-    payload = {"question": "Which reproducible data-processing pipelines did Marcelo build?"}
+    payload = {
+        "question": "Which reproducible data-processing pipelines did Marcelo build?"
+    }
 
     assert client.post("/ask", json=payload).status_code == 200
     limited = client.post("/ask", json=payload)
@@ -228,7 +242,7 @@ def test_post_ask_returns_an_abstention_when_generation_fails() -> None:
     payload = response.json()
     assert payload["answerable"] is False
     assert payload["limitations"] == [
-        "The source documents do not include information related to this question."
+        "The answer could not be generated or validated. Please try again."
     ]
     assert payload["model_version"] == "generation-unavailable"
 
